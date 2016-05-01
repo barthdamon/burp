@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 public class PlayerMove : MonoBehaviour {
 
-	float speed = 8;
+	float speed = 10;
 	public float ragdollBlendAmount = 0.5f;
 	public PlayerManager playerManager;
 
@@ -61,48 +61,62 @@ public class PlayerMove : MonoBehaviour {
 //
 //
 
-		void FixedUpdate() {
-			// Either 1 or zero cause its raw
-			string horizontalKey = playerManager.playerNumber == 1 ? "HorizontalOne" : "HorizontalTwo";
-			string verticalKey = playerManager.playerNumber == 1 ? "VerticalOne" : "VerticalTwo";
-			float h = Input.GetAxisRaw (horizontalKey);
-			float v = Input.GetAxisRaw (verticalKey);
-			Move (h, v);
-		}
+	void FixedUpdate() {
+		// Either 1 or zero cause its raw
+		string horizontalKey = playerManager.playerNumber == 1 ? "HorizontalOne" : "HorizontalTwo";
+		string verticalKey = playerManager.playerNumber == 1 ? "VerticalOne" : "VerticalTwo";
+		float h = Input.GetAxisRaw (horizontalKey);
+		float v = Input.GetAxisRaw (verticalKey);
+		Move (h, v);
+	}
 
-		void Move(float h, float v) {
-			Vector3 movement = new Vector3 (h, v, 0f);
-			Vector3 nMovement = movement.normalized * speed;
-	//		transform.Translate (nMovement, Space.World);
+	void Move(float h, float v) {
+		Vector3 movement = new Vector3 (h, v, 0f);
+		Vector3 nMovement = movement.normalized * speed;
+//		transform.Translate (nMovement, Space.World);
 
-			//5 here being gravity
-	//		Vector3 movementY = transform.up * speed;
-	//		Vector3 movementX = transform.right * speed;
+		//5 here being gravity
+//		Vector3 movementY = transform.up * speed;
+//		Vector3 movementX = transform.right * speed;
+//		Vector3 localVel = transform.InverseTransformDirection (rb.velocity);
+//		rb.velocity.y += v * speed * Time.deltaTime;
+//		rb.velocity.x += h * speed * Time.deltaTime;
+
+//		rb.velocity = transform.TransformDirection(localVel);
+//		rb.velocity = localVel;
+
+//		Component[] children=GetComponentsInChildren(typeof(Rigidbody));
+//		for (var i = 0; i < bodyParts.Count; i++) {
+//			Transform childTransform = bodyParts [i].transform;
+//			childTransform.Translate (nMovement, Space.World);
+////			childRb.angularVelocity = rb.angularVelocity;
+//			//child.rigidbody.AddForce (Vector3.up * 1000);
+//		}
+		Vector3 pos = transform.position;
+		pos.z = Mathf.Clamp(transform.position.z, 0, 0);
+		transform.position = pos;
+		if (playerManager.health > 0) {
 			rb.velocity = nMovement;
-	//		Vector3 localVel = transform.InverseTransformDirection (rb.velocity);
-	//		rb.velocity.y += v * speed * Time.deltaTime;
-	//		rb.velocity.x += h * speed * Time.deltaTime;
-
-	//		rb.velocity = transform.TransformDirection(localVel);
-	//		rb.velocity = localVel;
-
-	//		Component[] children=GetComponentsInChildren(typeof(Rigidbody));
-	//		for (var i = 0; i < bodyParts.Count; i++) {
-	//			Transform childTransform = bodyParts [i].transform;
-	//			childTransform.Translate (nMovement, Space.World);
-	////			childRb.angularVelocity = rb.angularVelocity;
-	//			//child.rigidbody.AddForce (Vector3.up * 1000);
-	//		}
-			Vector3 pos = transform.position;
-			pos.z = Mathf.Clamp(transform.position.z, 0, 0);
-			transform.position = pos;
-
 		}
+	}
 
 
-	public void ExplosiveForceAdded(float explosiveForce, Vector3 position, float explosionRadius) {
+	public void ExplosiveForceAdded(float explosiveForce, Vector3 position, float damageAmount) {
+		Vector3 direction = transform.position - position;
+		float distance = direction.magnitude;
+//		direction.Normalize();
+		Vector3 force = direction.normalized * (explosiveForce / distance);
+		Debug.Log ("x: " + force.x + " y: " + force.y + " z: " + force.z);
+//		GetComponent<Rigidbody>().AddForce(1000,180,100, ForceMode.Impulse);
+//		GetComponent<Rigidbody>().AddForce(nDirection.x * force, nDirection.y * force, nDirection.z * force, ForceMode.Impulse);
+		Component[] children = GetComponentsInChildren(typeof(Rigidbody));
+		for (var i = 0; i < children.Length; i++) {
+			children [i].GetComponent<Rigidbody> ().AddForce(force.x, force.y, 0, ForceMode.Impulse);
+//			children [i].GetComponent<Rigidbody> ().AddExplosionForce (explosiveForce, position, distance);
+		}
 		Debug.Log ("EXPLOSIVE FORCE BEING ADDED");
-		GetComponent<Rigidbody>().AddExplosionForce (explosiveForce, position, explosionRadius);
+		playerManager.LostHealth (damageAmount);
+//		GetComponent<Rigidbody>().AddExplosionForce (explosiveForce, position, explosionRadius);
 	}
 
 //	GetComponent<Rigidbody> ().position = new Vector3 (

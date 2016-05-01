@@ -5,12 +5,13 @@ using System.Resources;
 public class BallExplosion : MonoBehaviour {
 	public LayerMask playerMask;
 	public ParticleSystem explosionParticles;       
-	public AudioSource explosionAudio;                  
-	public float explosionForce = 200f;              
-	public float explosionRadius = 200f;
-
+	public AudioSource explosionAudio;                              
 	public Material ballGoalLineMaterial;
 	public Material ballMaterial;
+
+	private float explosionRadius = 20f;
+	private float explosionForce = 200f;
+	private float goalDepth = 3;
 
 
 	void Start()
@@ -34,10 +35,14 @@ public class BallExplosion : MonoBehaviour {
 		Collider[] colliders = Physics.OverlapSphere (transform.position, explosionRadius, playerMask);
 		Debug.Log ("COLLIDERS FOUND: " + colliders.Length);
 		for (int i = 0; i < colliders.Length; i++) {
-			PlayerMove player = colliders [i].GetComponentInChildren<PlayerMove> ();
-			if (!player)
-				continue;
-			player.ExplosiveForceAdded (explosionForce, transform.position, explosionRadius);
+			PlayerExplosiveRecognizer explosiveForceRecognizer = colliders [i].GetComponent<PlayerExplosiveRecognizer> ();
+			if (explosiveForceRecognizer) {
+				Debug.Log ("Player found");
+				// hard coded to back of the goal...
+				float xForce = transform.position.x < 0 ? -23 : 23;
+				Vector3 forcePosition = new Vector3(xForce, 0,0);
+				explosiveForceRecognizer.player.ExplosiveForceAdded (explosionForce, forcePosition, 0);
+			}
 			//			EnemyController targetController = targetRb.GetComponent<EnemyController> ();
 			//			if (!targetController)
 			//				continue;

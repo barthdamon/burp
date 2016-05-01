@@ -3,51 +3,95 @@ using System.Collections;
 
 public class AggressiveContact : MonoBehaviour {
 
+	public float damageAmount = 15f;
 	public bool passive = true;
-	private PlayerManager player;
+	public ParticleSystem hitParticles;
+	private PlayerManager playerManager;
+	private float explosionForce = 3f;
 
 	// Use this for initialization
 	void Start () {
-		player = transform.root.GetComponent<PlayerManager>();
+		playerManager = transform.root.GetComponent<PlayerManager>();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-	
+		Vector3 pos = transform.position;
+		pos.y = Mathf.Clamp(transform.position.y, -7.9f, 7.9f);
+		transform.position = pos;
 	}
 
 	void OnCollisionEnter(Collision collisionInfo) {
 		if (collisionInfo.gameObject.tag != "PlayerBody")
 			return;
-		
+
+		Transform otherLimbTransform = collisionInfo.gameObject.transform;
+
 		PlayerManager collidedPlayer = collisionInfo.gameObject.transform.root.GetComponent<PlayerManager>();
 
-		if (collidedPlayer.playerNumber == player.playerNumber)
+		if (collidedPlayer.playerNumber == playerManager.playerNumber)
 			return;
 
-		AggressiveContact otherPlayer = collisionInfo.gameObject.GetComponent<AggressiveContact> ();
+		AggressiveContact otherPlayerPart = collisionInfo.gameObject.GetComponent<AggressiveContact> ();
 
+		PlayerMove otherPlayerMove = collidedPlayer.GetComponentInChildren<PlayerMove> ();
+		PlayerMove playerMove = playerManager.GetComponentInChildren<PlayerMove> ();
 
+		// this will deal 2x the explosions....
 		// Both not passive
-		if (!passive && !otherPlayer.passive) {
-			// cause deflection
-			Debug.Log("DEFLECT");
+		bool damaged = false;
+		if (!passive && !otherPlayerPart.passive) {
+//			explode = true;
+			// cause deflection, both explode no damage
+//			Debug.Log("DEFLECT");
 		}
 
-		// Hit a passive target
-		if (!passive && otherPlayer.passive) {
-			// deal damage
-			Debug.Log("DAMAGE OTHER");
+		if (passive && !otherPlayerPart.passive) {
+			damaged = true;
+//			explode = true;
+			// this gets damaged
+//			Debug.Log("Player DAMAGED");
 		}
 
 		// Both passive
-		if (passive && otherPlayer.passive) {
-			// deal both of them damage
-			Debug.Log("DAMAGE BOTH");
+		//TODO: only cause one of the explosions not x2...
+		if (passive && otherPlayerPart.passive) {
+//			explode = true;
+			damaged = true;
+			// deal both of them damage, both explode
+//			Debug.Log("DAMAGE BOTH");
 		}
-			
+
+		if (otherPlayerMove.playerManager.health > 0 && playerManager.health > 0) {
+			playHitParticles (damaged, otherLimbTransform);
+			float amountDamaged = 0f;
+			if (damaged) {
+				amountDamaged = damageAmount;
+				playerManager.PlayHitSound ();
+			} else {
+				playerManager.PlayDeflectSound ();
+			}
+			playerMove.ExplosiveForceAdded (explosionForce, otherPlayerPart.transform.position, amountDamaged);
+		}
 	}
 
+	void playHitParticles(bool damaged, Transform otherLimb) {
+		hitParticles.GetComponent<Renderer> ().material.SetColor ("_TintColor", playerManager.PlayerColor ());
+		// set it facing opposite direction from where it was hit...
+
+		Vector3 particleDirection = transform.position - otherLimb.position;
+		hitParticles.transform.rotation = Quaternion.identity;
+		hitParticles.transform.rotation = Quaternion.FromToRotation (Vector3.back, particleDirection.normalized);
+		if (damaged) {
+			StartCoroutine (toggleParticles ());
+		}
+	}
+
+	IEnumerator toggleParticles() {
+		hitParticles.Play ();
+		yield return new WaitForSeconds(0.10f);
+		hitParticles.Stop ();
+	}
 
 	//	public LayerMask playerMask;
 	//	public ParticleSystem explosionParticles;       

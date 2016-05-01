@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour {
 	public Text teamOneScoreText;
 	public Text teamTwoScoreText;
+
 	public GameObject ball;
 
 
