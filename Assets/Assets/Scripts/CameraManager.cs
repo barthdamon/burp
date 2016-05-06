@@ -26,7 +26,7 @@ public class CameraManager : MonoBehaviour {
 		Vector3 averagePosition = (playerOne.transform.position + playerTwo.transform.position) / 2;
 		Vector3 distance = playerOne.transform.position - playerTwo.transform.position;
 		ManipulateTime (distance);
-		ZoomCamera (playerDistanceX, playerDistanceY, averagePosition);
+		ZoomCamera (distance, averagePosition);
 		// if its less than certain distance, lerp the camera closer to average, otherwise lerp to startPosition
 		// 2) if distance is past certain point begin slowing down time....
 	}
@@ -35,29 +35,32 @@ public class CameraManager : MonoBehaviour {
 		float magnitude = distance.magnitude;
 		bool playersAlive = playerOne.playerManager.IsAlive () && playerTwo.playerManager.IsAlive ();
 		if (magnitude < 4f && playersAlive) {
-			Time.timeScale = 0.6f;
+			Time.timeScale = 0.8f;
 		} else {
 			Time.timeScale = 1.0f;
 		}
 	}
 
-	void ZoomCamera(float distanceX, float distanceY, Vector3 averagePosition) {
+	void ZoomCamera(Vector3 distance, Vector3 averagePosition) {
 //		Vector3 trejectory = (averagePosition - transform.position).normalized;
 //		trejectory.y = 0;
 //		trejectory.z = 0;
 //
 //		transform.rotation = Quaternion.LookRotation (trejectory);
-		float maxZoom = distanceX > distanceY ? distanceX : distanceY;
-		averagePosition.z = maxZoom < -10 ? maxZoom + 3 : -10;
+
+		float maxZoom = -10;
+
+//		float maxZoom = distanceX > distanceY ? distanceX : distanceY;
+		averagePosition.z = maxZoom;
 		Vector3 destination;
-		if (maxZoom < 5) {
+		if (distance.magnitude < 5) {
 			destination = averagePosition;
 		} else {
 			destination = startPosition;
 		}
 //		transform.position = Mathf.SmoothDamp(transform.position, destination, 10.0f, Time.deltaTime);
 		Vector3 pos = transform.position;
-		pos.y = Mathf.Clamp(transform.position.y, 5, 0);
+//		pos.y = Mathf.Clamp(transform.position.y, 5, -5);
 		transform.position = Vector3.Lerp (pos, destination, Time.deltaTime);
 	}
 }

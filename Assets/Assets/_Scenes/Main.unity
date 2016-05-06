@@ -459,6 +459,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerOne: {fileID: 1686210485}
   playerTwo: {fileID: 1760726909}
+  ball: {fileID: 0}
 --- !u!1 &612071823
 GameObject:
   m_ObjectHideFlags: 0
