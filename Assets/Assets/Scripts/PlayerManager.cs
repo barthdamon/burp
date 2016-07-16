@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 [System.Serializable]
 public class Boundary {
@@ -10,9 +11,12 @@ public class PlayerManager : MonoBehaviour {
 
 	public int playerNumber;
 	public Boundary boundary;
-	public float health = 100;
 	public AudioSource hitSound;
 	public AudioSource deflectSound;
+	public Slider playerHealthSlider;
+
+	private bool knockedOut = false;
+	private float health = 100;
 
 	// Use this for initialization
 	void Start () {
@@ -27,18 +31,38 @@ public class PlayerManager : MonoBehaviour {
 	}
 
 	public void LostHealth (float amount) {
-		health -= amount;
-		if (health <= 0) {
-			Debug.Log ("HEALTH OUT, RESETTING");
-			StartCoroutine (ResetHealth ());
+		if (!knockedOut) {
+			health -= amount;
+			if (health > 0) {
+				playerHealthSlider.value = health / 100;
+			} else {
+				playerHealthSlider.value = 0;
+				health = 0;
+				knockedOut = true;
+				Debug.Log ("HEALTH OUT, RESETTING");
+				StartCoroutine (RechargeHealth ());
+			}
 		}
-		// update health status bar
 	}
 
 	//temporary until drinking is a thing
-	IEnumerator ResetHealth() {
-		yield return new WaitForSeconds (5f);
-		health = 100f;
+	void ResetHealth() {
+		knockedOut = false;
+	}
+
+	IEnumerator RechargeHealth() {
+		while (knockedOut) {
+			Debug.Log ("Recharging....." + health);
+			health += 1;
+			playerHealthSlider.value = health / 100;
+			if (health == 100) {
+				Debug.Log ("Stopping Coroutine");
+				ResetHealth ();
+				StopCoroutine (RechargeHealth ());
+//				return;
+			}
+			yield return new WaitForSeconds (0.08f);
+		}
 	}
 
 	public void PlayHitSound() {
@@ -54,6 +78,6 @@ public class PlayerManager : MonoBehaviour {
 	}
 
 	public bool IsAlive() {
-		return health > 0;
+		return health > 0 && !knockedOut;
 	}
 }

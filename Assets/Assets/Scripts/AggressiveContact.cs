@@ -62,7 +62,7 @@ public class AggressiveContact : MonoBehaviour {
 //			Debug.Log("DAMAGE BOTH");
 		}
 
-		if (otherPlayerMove.playerManager.health > 0 && playerManager.health > 0) {
+		if (otherPlayerMove.playerManager.IsAlive() && playerManager.IsAlive()) {
 			playHitParticles (damaged, otherLimbTransform);
 			float amountDamaged = 0f;
 			if (damaged) {

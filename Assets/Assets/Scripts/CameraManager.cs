@@ -48,7 +48,7 @@ public class CameraManager : MonoBehaviour {
 //
 //		transform.rotation = Quaternion.LookRotation (trejectory);
 
-		float maxZoom = -10;
+		float maxZoom = -20;
 
 //		float maxZoom = distanceX > distanceY ? distanceX : distanceY;
 		averagePosition.z = maxZoom;
@@ -58,9 +58,13 @@ public class CameraManager : MonoBehaviour {
 		} else {
 			destination = startPosition;
 		}
+
+		destination.y = Mathf.Clamp (destination.y, 5.5f, 2);
+		destination.x = Mathf.Clamp (destination.x, -14, 14);
+
 //		transform.position = Mathf.SmoothDamp(transform.position, destination, 10.0f, Time.deltaTime);
 		Vector3 pos = transform.position;
-//		pos.y = Mathf.Clamp(transform.position.y, 5, -5);
+
 		transform.position = Vector3.Lerp (pos, destination, Time.deltaTime);
 	}
 }

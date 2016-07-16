@@ -95,7 +95,7 @@ public class PlayerMove : MonoBehaviour {
 		Vector3 pos = transform.position;
 		pos.z = Mathf.Clamp(transform.position.z, 0, 0);
 		transform.position = pos;
-		if (playerManager.health > 0) {
+		if (playerManager.IsAlive()) {
 			rb.velocity = nMovement;
 		}
 	}

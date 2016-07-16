@@ -26,11 +26,11 @@ public class GameManager : MonoBehaviour {
 		Debug.Log ("GOAL SCORED, starting again");
 		if (teamNumber == 2) {
 			teamOneScore++;
-			teamOneScoreText.text = "Team 1: " + teamOneScore;
+			teamOneScoreText.text = "Yellow Team: " + teamOneScore;
 			// dock points for team # 1
 		} else {
 			teamTwoScore++;
-			teamTwoScoreText.text = "Team 2: " + teamTwoScore;
+			teamTwoScoreText.text = "Blue Team: " + teamTwoScore;
 			// dock points for team # 2
 		}
 		Vector3 spawnPoint = new Vector3 (0, 6, 0);
