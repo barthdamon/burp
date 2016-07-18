@@ -14,13 +14,15 @@ public class PlayerManager : MonoBehaviour {
 	public AudioSource hitSound;
 	public AudioSource deflectSound;
 	public Slider playerHealthSlider;
+	public Image playerHealthFill;
+	public GameManager gameManager;
 
 	private bool knockedOut = false;
 	private float health = 100;
 
 	// Use this for initialization
 	void Start () {
-	
+		playerHealthFill.color = playerNumber == 1 ? Color.yellow : Color.cyan;
 	}
 	
 	// Update is called once per frame
@@ -51,11 +53,13 @@ public class PlayerManager : MonoBehaviour {
 	}
 
 	IEnumerator RechargeHealth() {
+		playerHealthFill.color = Color.red;
 		while (knockedOut) {
 			Debug.Log ("Recharging....." + health);
 			health += 1;
 			playerHealthSlider.value = health / 100;
 			if (health == 100) {
+				playerHealthFill.color = playerNumber == 1 ? Color.yellow : Color.cyan;
 				Debug.Log ("Stopping Coroutine");
 				ResetHealth ();
 				StopCoroutine (RechargeHealth ());
@@ -78,6 +82,6 @@ public class PlayerManager : MonoBehaviour {
 	}
 
 	public bool IsAlive() {
-		return health > 0 && !knockedOut;
+		return health > 0 && !knockedOut && gameManager.GameIsActive();
 	}
 }
