@@ -56,6 +56,7 @@ public class GameManager : MonoBehaviour {
 		Application.LoadLevel (Application.loadedLevel);
 	}
 
+
 	public bool GameIsActive() {
 		return gameActive;
 	}
