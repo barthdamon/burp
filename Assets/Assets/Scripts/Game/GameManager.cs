@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour {
 	public Text gameTimerText;
 
 	public GameObject ball;
+	public AIStateMachine AI;
 
 	private bool gameActive = false;
 	private float endTime;
@@ -74,7 +75,8 @@ public class GameManager : MonoBehaviour {
 				// dock points for team # 2
 			}
 			Vector3 spawnPoint = new Vector3 (0, 6, 0);
-			Instantiate(ball, spawnPoint, Quaternion.identity);
+			GameObject NewBall = Instantiate(ball, spawnPoint, Quaternion.identity) as GameObject;
+			AI.Ball = NewBall.GetComponent<BallMove> ();
 		}
 	}
 

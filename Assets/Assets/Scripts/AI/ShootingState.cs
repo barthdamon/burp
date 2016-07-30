@@ -10,8 +10,8 @@ public class ShootingState : State {
 	float SlowDownRange = 3f;
 
 	float TopSpeed = 10f;
-	float SlowDownSpeed = 5f;
-	float ShootingSpeed = 2f;
+	float SlowDownSpeed = 8f;
+	float ShootingSpeed = 10f;
 
 
 	public ShootingState(AIStateMachine AI, EState EState)
@@ -66,24 +66,40 @@ public class ShootingState : State {
 	private Vector3 ArriveToShoot(Vector3 TargetPosition)
 	{
 		// if the distance to the position from the player is greater than some constant, go there, else shoot
-
-		// this all needs to be relative in the players space
-//		Vector3 LocalTargetPos = AI.ComputerManager.transform.InverseTransformPoint(TargetPosition);
 		Vector3 ComputerPlayerPos = AI.ComputerMove.transform.position;
 		Vector3 DistanceToDestination = TargetPosition - ComputerPlayerPos;
 
 		if (DistanceToDestination.magnitude > ShootingRange) {
 			// Keep going
-			AI.SetCurrentSpeed(DistanceToDestination.magnitude > SlowDownRange ? TopSpeed : SlowDownSpeed);
-			return DistanceToDestination.normalized;
+			if (DistanceToDestination.magnitude > SlowDownRange) {
+				AI.SetCurrentSpeed (TopSpeed);
+				return DistanceToDestination.normalized;
+			} else {
+				AI.SetCurrentSpeed (SlowDownSpeed);
+				// figure out if on the wrong side of the ball (always going right or up in this situation)
+//				Vector3 BallPos = AI.Ball.transform.position;
+				if (DistanceToDestination.x > 0) {
+					return DistanceToDestination.normalized;
+				} else {
+					// Get around the ball before continuing
+					return CalculateAvoidBallTrajectory (DistanceToDestination.normalized);
+				}
+			}
 		} else {
-			// Calculate shoot position
-			// Player is on the wrong side of the ball, how to get it to move to the right side before hitting....
-			// Prevent player from collider with the ball on a vector that would direct it towards its own goal (make it try to keep going to the other side)
-			// once within a certain range and on correct side, pull some kind of hit maneuver in the direction of the ball (up, left, down to get leg swung around)
+			// Put through the shoot maneuver somehow...
 			AI.SetCurrentSpeed(ShootingSpeed);
 			return DistanceToDestination.normalized;
 		}
+	}
 
+	private Vector3 CalculateAvoidBallTrajectory(Vector3 Dest) {
+		// set a course 45degrees up or down from target pos vector depending on which is closer
+		Vector3 AvoidBallTrajectory;
+		if (Dest.y > 0) {
+			AvoidBallTrajectory = new Vector3(Mathf.Cos(Dest.x + (Mathf.PI / 4)), Mathf.Sin(Dest.y + (Mathf.PI / 4)), 0f);
+		} else {
+			AvoidBallTrajectory = new Vector3(Mathf.Cos(Dest.x - (Mathf.PI / 4)), Mathf.Sin(Dest.y - (Mathf.PI / 4)), 0f);
+		}
+		return -1 * AvoidBallTrajectory.normalized;
 	}
 }

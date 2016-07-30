@@ -4,10 +4,11 @@ using System.Collections;
 public class BallMove : MonoBehaviour {
 
 	public BoxCollider floorCollider;
+	private Rigidbody rb;
 
 	// Use this for initialization
 	void Start () {
-	
+		rb = GetComponent<Rigidbody>();
 	}
 	
 	// Update is called once per frame
@@ -18,6 +19,18 @@ public class BallMove : MonoBehaviour {
 //		pos.x = Mathf.Clamp (transform.position.x, -floorMax, floorMax);
 //		pos.y = Mathf.Clamp (transform.position.y, 0, 7);
 		transform.position = pos;
+
+		if (transform.position.y < -5) {
+			// Set y to zero when its below -5
+			rb.AddForce(new Vector3(0f,2f,0f));
+//			Vector3 CurrentVelocity = rb.velocity;
+//			float CurrentY = rb.velocity.y;
+//			if (CurrentVelocity.y < 0) {
+//				CurrentVelocity.y += 0.1f;
+//			}
+//			float NewY = Mathf.Lerp (CurrentY, CurrentVelocity.y, 1.0f);
+//			rb.velocity.y = NewY;
+		}
 	}
 
 }
