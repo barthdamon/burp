@@ -20,6 +20,8 @@ public class PlayerManager : MonoBehaviour {
 	private bool knockedOut = false;
 	private float health = 100;
 
+	private AIStateMachine StateMachine;
+
 	// Use this for initialization
 	void Start () {
 		playerHealthFill.color = playerNumber == 1 ? Color.yellow : Color.cyan;

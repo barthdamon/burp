@@ -1,0 +1,30 @@
+﻿using UnityEngine;
+using System.Collections;
+
+[System.Serializable]
+public class EvadingState : State {
+
+	public EvadingState(AIStateMachine AI, EState Estate)
+	{
+		this.AI = AI;
+		this.EState = EState;
+	}
+
+	// Called when entering this state
+	public override void Enter() {
+	}
+
+	// Called when exiting this state
+	public override void Exit() {
+	}
+
+	// Called when in this state
+	public override void Execute() {
+	}
+
+	// Called when state recieves a message
+	public override void HandleMessage(Telegram Telegram)
+	{
+		Debug.Log ("State Disregards Message");
+	}
+}
