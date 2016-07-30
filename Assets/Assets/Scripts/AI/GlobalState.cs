@@ -4,7 +4,7 @@ using System.Collections;
 [System.Serializable]
 public class GlobalState : State {
 
-	public GlobalState(AIStateMachine AI, EState Estate)
+	public GlobalState(AIStateMachine AI, EState EState)
 	{
 		this.Name = "Global State";
 		Debug.Log ("BEING CREATED: " + Name);

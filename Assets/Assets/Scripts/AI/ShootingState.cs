@@ -14,7 +14,7 @@ public class ShootingState : State {
 	float ShootingSpeed = 2f;
 
 
-	public ShootingState(AIStateMachine AI, EState Estate)
+	public ShootingState(AIStateMachine AI, EState EState)
 	{
 		this.Name = "Shooting State";
 		Debug.Log ("BEING CREATED: " + Name);

@@ -33,23 +33,16 @@ public class AIStateMachine : MonoBehaviour {
 
 		StateSingletons = new List<State>();
 		StateSingletons.Add (new ShootingState(this, EState.Shooting));
-		CurrentState = StateSingletons [0];
 		StateSingletons.Add (new EvadingState(this, EState.Evading));
 		StateSingletons.Add (new DefendingState(this, EState.Defending));
 		StateSingletons.Add (new AttackingState(this, EState.Attacking));
-
-//		List<EState> EStates = new List<EState> { EState.Attacking, EState.Defending, EState.Evading, EState.Shooting };
-//
-//		for (int i = 0; i < StateSingletons.Count; i++) {
-////			StateSingletons [i].SetupState (this, EStates [i]);
-//		}
 
 		BeginSimulation ();
 	}
 
 	// Update is called once per frame
 	void Update () {
-		Debug.Log ("Current State: "  + CurrentState.Name + "Global State: " + m_GlobalState.Name);
+//		Debug.Log ("Current State: " + CurrentState.Name + "Global State: " + m_GlobalState.Name);
 		if (CurrentState != null && m_GlobalState != null) 
 		{
 			Debug.Log ("AI MACHINE EXECUTING");
@@ -61,13 +54,15 @@ public class AIStateMachine : MonoBehaviour {
 
 	void BeginSimulation() 
 	{
-//		ChangeState (EState.Shooting);
+		ChangeState (EState.Shooting);
 	}
 
 	public State FetchState(EState EState)
 	{
+		Debug.Log ("Fetching State: " + EState);
 		for (int i = 0; i < StateSingletons.Count; i++)
 		{
+			Debug.Log("Stored State Found: " + StateSingletons[i].EState);
 			if (StateSingletons [i].EState == EState) 
 			{
 				Debug.Log ("State Fetched");

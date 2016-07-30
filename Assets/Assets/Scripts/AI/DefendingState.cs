@@ -4,7 +4,7 @@ using System.Collections;
 [System.Serializable]
 public class DefendingState : State {
 
-	public DefendingState(AIStateMachine AI, EState Estate)
+	public DefendingState(AIStateMachine AI, EState EState)
 	{
 		this.AI = AI;
 		this.EState = EState;
