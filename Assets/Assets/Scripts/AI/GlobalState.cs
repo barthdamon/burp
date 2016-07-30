@@ -23,7 +23,7 @@ public class GlobalState : State {
 	// Called when in this state
 	public override void Execute() {
 		// Clamp postion within the boundary somehow....
-		Debug.Log ("Executing Global State");
+//		Debug.Log ("Executing Global State");
 	}
 
 	// Called when state recieves a message

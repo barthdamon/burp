@@ -32,22 +32,26 @@ public class ShootingState : State {
 
 	// Called when in this state
 	public override void Execute() {
-		Debug.Log ("Executing Shooting State");
+//		Debug.Log ("Executing Shooting State");
 		// First get the position of the ball
 		Vector3 BallPos = AI.Ball.transform.position;
 		// Need the static position of the center of the goal
 		Vector3 GoalPos = new Vector3(20f,0f,0f);
 
 		// Find the vector from the ball to the goal
-		Vector3 DesiredTrajectory = GoalPos - BallPos;
+		Vector3 DesiredTrajectory = BallPos - GoalPos;
+//		Debug.Log ("Desired Traj: " + DesiredTrajectory);
 
 		// Find the position behind the ball where the player needs to be (like an offset)
 		// Reverse the vector backwards behind the ball by the ballOffset, then set the position as the desired destination
-		Vector3 TargetPos = -1 * DesiredTrajectory * BallOffset;
+		Vector3 TargetPos = BallPos + (DesiredTrajectory.normalized * BallOffset);
+		Debug.Log ("Target Pos: " + TargetPos);
 
 		Vector3 NewHeading = new Vector3(0f,0f,0f);
 
 		NewHeading = ArriveToShoot(TargetPos);
+
+		Debug.Log ("New Heading: " + NewHeading);
 			
 		AI.SetCurrentHeading (NewHeading);
 	}
@@ -62,7 +66,10 @@ public class ShootingState : State {
 	private Vector3 ArriveToShoot(Vector3 TargetPosition)
 	{
 		// if the distance to the position from the player is greater than some constant, go there, else shoot
-		Vector3 ComputerPlayerPos = AI.ComputerManager.transform.position;
+
+		// this all needs to be relative in the players space
+//		Vector3 LocalTargetPos = AI.ComputerManager.transform.InverseTransformPoint(TargetPosition);
+		Vector3 ComputerPlayerPos = AI.ComputerMove.transform.position;
 		Vector3 DistanceToDestination = TargetPosition - ComputerPlayerPos;
 
 		if (DistanceToDestination.magnitude > ShootingRange) {

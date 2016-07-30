@@ -25,11 +25,7 @@ public class AIStateMachine : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		// Set the initial state, to score perhaps???
-		Debug.Log("Starting AI Manager!");
-//		m_GlobalState = new GlobalState (this, EState.Global);
 		m_GlobalState = new GlobalState(this, EState.Global);
-//		m_GlobalState.SetupState (this, EState.Global);
 
 		StateSingletons = new List<State>();
 		StateSingletons.Add (new ShootingState(this, EState.Shooting));
@@ -45,7 +41,7 @@ public class AIStateMachine : MonoBehaviour {
 //		Debug.Log ("Current State: " + CurrentState.Name + "Global State: " + m_GlobalState.Name);
 		if (CurrentState != null && m_GlobalState != null) 
 		{
-			Debug.Log ("AI MACHINE EXECUTING");
+//			Debug.Log ("AI MACHINE EXECUTING");
 			CurrentState.Execute ();
 			// Update global after to ensure that movement doesn't go outside of the boundary
 			m_GlobalState.Execute ();
@@ -59,13 +55,10 @@ public class AIStateMachine : MonoBehaviour {
 
 	public State FetchState(EState EState)
 	{
-		Debug.Log ("Fetching State: " + EState);
 		for (int i = 0; i < StateSingletons.Count; i++)
 		{
-			Debug.Log("Stored State Found: " + StateSingletons[i].EState);
 			if (StateSingletons [i].EState == EState) 
 			{
-				Debug.Log ("State Fetched");
 				return StateSingletons [i];
 			}
 		}
@@ -81,7 +74,9 @@ public class AIStateMachine : MonoBehaviour {
 			PreviusState = CurrentState;
 			CurrentState = NewState;
 
-			PreviusState.Exit ();
+			if (PreviusState != null) {
+				PreviusState.Exit ();
+			}
 			CurrentState.Enter ();
 		}
 	}
@@ -98,7 +93,7 @@ public class AIStateMachine : MonoBehaviour {
 	// Getters and Setters
 	public void SetCurrentHeading(Vector3 NewHeading)
 	{
-		CurrentHeading = NewHeading.normalized;
+		CurrentHeading = NewHeading;
 	}
 
 	public Vector3 GetCurrentHeading()
