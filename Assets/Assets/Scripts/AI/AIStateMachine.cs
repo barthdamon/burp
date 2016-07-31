@@ -93,6 +93,7 @@ public class AIStateMachine : MonoBehaviour {
 	// Getters and Setters
 	public void SetCurrentHeading(Vector3 NewHeading)
 	{
+		Debug.Log ("New Heading: " + NewHeading);
 		CurrentHeading = NewHeading;
 	}
 

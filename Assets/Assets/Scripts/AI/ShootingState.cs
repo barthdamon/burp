@@ -24,15 +24,19 @@ public class ShootingState : State {
 
 	// Called when entering this state
 	public override void Enter() {
+		Debug.Log ("Entering Shooting State");
 	}
 
 	// Called when exiting this state
 	public override void Exit() {
+		Debug.Log ("Exiting Shooting State");
 	}
 
 	// Called when in this state
 	public override void Execute() {
 //		Debug.Log ("Executing Shooting State");
+		// Determine if need to switch state to defending
+
 		// First get the position of the ball
 		Vector3 BallPos = AI.Ball.transform.position;
 		// Need the static position of the center of the goal
@@ -45,13 +49,11 @@ public class ShootingState : State {
 		// Find the position behind the ball where the player needs to be (like an offset)
 		// Reverse the vector backwards behind the ball by the ballOffset, then set the position as the desired destination
 		Vector3 TargetPos = BallPos + (DesiredTrajectory.normalized * BallOffset);
-		Debug.Log ("Target Pos: " + TargetPos);
+//		Debug.Log ("Target Pos: " + TargetPos);
 
 		Vector3 NewHeading = new Vector3(0f,0f,0f);
 
 		NewHeading = ArriveToShoot(TargetPos);
-
-		Debug.Log ("New Heading: " + NewHeading);
 			
 		AI.SetCurrentHeading (NewHeading);
 	}
@@ -75,10 +77,10 @@ public class ShootingState : State {
 				AI.SetCurrentSpeed (TopSpeed);
 				return DistanceToDestination.normalized;
 			} else {
-				AI.SetCurrentSpeed (SlowDownSpeed);
 				// figure out if on the wrong side of the ball (always going right or up in this situation)
 //				Vector3 BallPos = AI.Ball.transform.position;
-				if (DistanceToDestination.x > 0) {
+				if (DistanceToDestination.x < -1 * SlowDownRange || DistanceToDestination.x > 0f) {
+					AI.SetCurrentSpeed (SlowDownSpeed);
 					return DistanceToDestination.normalized;
 				} else {
 					// Get around the ball before continuing
@@ -87,6 +89,7 @@ public class ShootingState : State {
 			}
 		} else {
 			// Put through the shoot maneuver somehow...
+			// Need logic for if it is right near the goal vs far away. Perhaps find trajectories against the wall that it can shoot against to
 			AI.SetCurrentSpeed(ShootingSpeed);
 			return DistanceToDestination.normalized;
 		}
@@ -96,10 +99,15 @@ public class ShootingState : State {
 		// set a course 45degrees up or down from target pos vector depending on which is closer
 		Vector3 AvoidBallTrajectory;
 		if (Dest.y > 0) {
-			AvoidBallTrajectory = new Vector3(Mathf.Cos(Dest.x + (Mathf.PI / 4)), Mathf.Sin(Dest.y + (Mathf.PI / 4)), 0f);
+			// below the ball
+			Debug.Log ("greater than y");
+			AvoidBallTrajectory = new Vector3(-1 * Mathf.Cos(Dest.x - (Mathf.PI / 4)), Mathf.Sin(Dest.y - (Mathf.PI / 4)), 0f);
+			return AvoidBallTrajectory.normalized;
 		} else {
-			AvoidBallTrajectory = new Vector3(Mathf.Cos(Dest.x - (Mathf.PI / 4)), Mathf.Sin(Dest.y - (Mathf.PI / 4)), 0f);
+			// above the ball
+			Debug.Log ("Less than y");
+			AvoidBallTrajectory = new Vector3(Mathf.Cos(Dest.x + (Mathf.PI / 4)), Mathf.Sin(Dest.y + (Mathf.PI / 4)), 0f);
+			return AvoidBallTrajectory.normalized;
 		}
-		return -1 * AvoidBallTrajectory.normalized;
 	}
 }

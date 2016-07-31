@@ -202,6 +202,10 @@ Prefab:
       propertyPath: ShapeModule.randomDirection
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 19800000, guid: 32aafb358d61bd14b9b27ed0871fe43b, type: 2}
+      propertyPath: lengthInSec
+      value: 0.5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 32aafb358d61bd14b9b27ed0871fe43b, type: 2}
   m_IsPrefabParent: 0
@@ -2385,7 +2389,7 @@ Prefab:
       objectReference: {fileID: 496114248}
     - target: {fileID: 11476796, guid: 9516995a981d24f1d94e651fc46761f7, type: 2}
       propertyPath: isComputerPlayer
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 11476796, guid: 9516995a981d24f1d94e651fc46761f7, type: 2}
       propertyPath: AI
