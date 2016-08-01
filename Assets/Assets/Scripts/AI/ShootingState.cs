@@ -10,8 +10,19 @@ public class ShootingState : State {
 	float SlowDownRange = 3f;
 
 	float TopSpeed = 10f;
-	float SlowDownSpeed = 8f;
+	float SlowDownSpeed = 10f;
 	float ShootingSpeed = 10f;
+
+	// Need the static position of the center of the goal
+	Vector3 GoalPos = new Vector3(20f,0f,0f);
+
+	// the constant for how close the human needs to be in shooting range to shoot at walls instead
+	float HumanPosAvoidConstant = 0.3f;
+
+	float DistanceToSpin = 10f;
+
+	bool IsSpinningToShoot = false;
+	float SpinDegrees = 0f;
 
 
 	public ShootingState(AIStateMachine AI, EState EState)
@@ -36,20 +47,7 @@ public class ShootingState : State {
 	public override void Execute() {
 //		Debug.Log ("Executing Shooting State");
 		// Determine if need to switch state to defending
-
-		// First get the position of the ball
-		Vector3 BallPos = AI.Ball.transform.position;
-		// Need the static position of the center of the goal
-		Vector3 GoalPos = new Vector3(20f,0f,0f);
-
-		// Find the vector from the ball to the goal
-		Vector3 DesiredTrajectory = BallPos - GoalPos;
-//		Debug.Log ("Desired Traj: " + DesiredTrajectory);
-
-		// Find the position behind the ball where the player needs to be (like an offset)
-		// Reverse the vector backwards behind the ball by the ballOffset, then set the position as the desired destination
-		Vector3 TargetPos = BallPos + (DesiredTrajectory.normalized * BallOffset);
-//		Debug.Log ("Target Pos: " + TargetPos);
+		Vector3 TargetPos = CalculateTargetPos ();
 
 		Vector3 NewHeading = new Vector3(0f,0f,0f);
 
@@ -62,6 +60,36 @@ public class ShootingState : State {
 	public override void HandleMessage(Telegram Telegram)
 	{
 		Debug.Log ("State Disregards Message");
+	}
+
+
+
+
+
+	private Vector3 CalculateTargetPos()
+	{
+		// First get the position of the ball
+		Vector3 BallPos = AI.Ball.transform.position;
+
+		// Find the vector from the goal to the ball
+		Vector3 DesiredTrajectory = BallPos - GoalPos;
+		//		Debug.Log ("Desired Traj: " + DesiredTrajectory);
+		// IF other player is in the way, and computer is outside shooting range, change the target pos to be a relative distance to the goal that produces a good angle to score (around the player)
+		Vector3 TargetPos;
+
+		Vector3 VectorToHuman = AI.HumanMove.transform.position - BallPos;
+		if (Vector3.Dot (VectorToHuman, DesiredTrajectory) > HumanPosAvoidConstant) {
+			// get cross product with the goal being the destination to find the position on the wall it needs to get to
+		} else {
+			
+		}
+
+		// Find the position behind the ball where the player needs to be (like an offset)
+		// Reverse the vector backwards behind the ball by the ballOffset, then set the position as the desired destination
+		TargetPos = BallPos + (DesiredTrajectory.normalized * BallOffset);
+		//		Debug.Log ("Target Pos: " + TargetPos);
+
+		return TargetPos;
 	}
 
 
@@ -89,9 +117,17 @@ public class ShootingState : State {
 			}
 		} else {
 			// Put through the shoot maneuver somehow...
-			// Need logic for if it is right near the goal vs far away. Perhaps find trajectories against the wall that it can shoot against to
 			AI.SetCurrentSpeed(ShootingSpeed);
-			return DistanceToDestination.normalized;
+			if ((GoalPos - ComputerPlayerPos).magnitude > DistanceToSpin) {
+				// now that he is in shooting position, perhaps he can swing for either side of the wall that lets him bounce up to it.
+				// need to follow through a spin...
+				if (!IsSpinningToShoot) {
+					// start rotating
+				}
+				return DistanceToDestination.normalized;
+			} else {
+				return DistanceToDestination.normalized;
+			}
 		}
 	}
 
@@ -100,12 +136,12 @@ public class ShootingState : State {
 		Vector3 AvoidBallTrajectory;
 		if (Dest.y > 0) {
 			// below the ball
-			Debug.Log ("greater than y");
+//			Debug.Log ("greater than y");
 			AvoidBallTrajectory = new Vector3(-1 * Mathf.Cos(Dest.x - (Mathf.PI / 4)), Mathf.Sin(Dest.y - (Mathf.PI / 4)), 0f);
 			return AvoidBallTrajectory.normalized;
 		} else {
 			// above the ball
-			Debug.Log ("Less than y");
+//			Debug.Log ("Less than y");
 			AvoidBallTrajectory = new Vector3(Mathf.Cos(Dest.x + (Mathf.PI / 4)), Mathf.Sin(Dest.y + (Mathf.PI / 4)), 0f);
 			return AvoidBallTrajectory.normalized;
 		}

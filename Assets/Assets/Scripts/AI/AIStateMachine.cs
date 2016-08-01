@@ -7,6 +7,7 @@ public class AIStateMachine : MonoBehaviour {
 	// For the AI State machine to monitor the Human Player and the ball
 	public BallMove Ball;
 	public PlayerManager HumanPlayer;
+	public PlayerMove HumanMove;
 
 	// For the AI State machine to change the computers behavior
 	public PlayerManager ComputerManager;
@@ -42,9 +43,8 @@ public class AIStateMachine : MonoBehaviour {
 		if (CurrentState != null && m_GlobalState != null) 
 		{
 //			Debug.Log ("AI MACHINE EXECUTING");
-			CurrentState.Execute ();
-			// Update global after to ensure that movement doesn't go outside of the boundary
 			m_GlobalState.Execute ();
+			CurrentState.Execute ();
 		}
 	}
 
@@ -68,7 +68,7 @@ public class AIStateMachine : MonoBehaviour {
 	public void ChangeState(EState NewStateEState)
 	{
 		State NewState = FetchState (NewStateEState);
-		if (NewState != null)
+		if (NewState != null && NewState != CurrentState)
 		{
 			Debug.Log ("AI Changing state");
 			PreviusState = CurrentState;
@@ -93,7 +93,7 @@ public class AIStateMachine : MonoBehaviour {
 	// Getters and Setters
 	public void SetCurrentHeading(Vector3 NewHeading)
 	{
-		Debug.Log ("New Heading: " + NewHeading);
+//		Debug.Log ("New Heading: " + NewHeading);
 		CurrentHeading = NewHeading;
 	}
 

@@ -16,11 +16,16 @@ public class PlayerManager : MonoBehaviour {
 	public Slider playerHealthSlider;
 	public Image playerHealthFill;
 	public GameManager gameManager;
+	public PlayerMove playerMove;
+
+	public BroadCaster Broadcaster;
 
 	private bool knockedOut = false;
 	private float health = 100;
 
-	private AIStateMachine StateMachine;
+	private bool RecentlyHit = false;
+	private float HitRecharge = 1;
+
 
 	// Use this for initialization
 	void Start () {
@@ -37,6 +42,8 @@ public class PlayerManager : MonoBehaviour {
 	public void LostHealth (float amount) {
 		if (!knockedOut) {
 			health -= amount;
+			RecentlyHit = true;
+			StartCoroutine (ResetHittable ());
 			if (health > 0) {
 				playerHealthSlider.value = health / 100;
 			} else {
@@ -44,6 +51,8 @@ public class PlayerManager : MonoBehaviour {
 				health = 0;
 				knockedOut = true;
 				Debug.Log ("HEALTH OUT, RESETTING");
+				Telegram NewTelegram = new Telegram (EMessage.KockOutOccured, GetComponent<GameObject>());
+				Broadcaster.RelayTelegram (NewTelegram);
 				StartCoroutine (RechargeHealth ());
 			}
 		}
@@ -54,15 +63,27 @@ public class PlayerManager : MonoBehaviour {
 		knockedOut = false;
 	}
 
+	IEnumerator ResetHittable() {
+		while (RecentlyHit) {
+			HitRecharge -= .5f;
+			if (HitRecharge == 0) {
+				HitRecharge = 1f;
+				RecentlyHit = false;
+				StopCoroutine(ResetHittable());
+			}	
+			yield return new WaitForSeconds(0.5f);
+		}
+	}
+
 	IEnumerator RechargeHealth() {
 		playerHealthFill.color = Color.red;
 		while (knockedOut) {
-			Debug.Log ("Recharging....." + health);
+//			Debug.Log ("Recharging....." + health);
 			health += 1;
 			playerHealthSlider.value = health / 100;
 			if (health == 100) {
 				playerHealthFill.color = playerNumber == 1 ? Color.yellow : Color.cyan;
-				Debug.Log ("Stopping Coroutine");
+//				Debug.Log ("Stopping Coroutine");
 				ResetHealth ();
 				StopCoroutine (RechargeHealth ());
 //				return;
@@ -85,5 +106,13 @@ public class PlayerManager : MonoBehaviour {
 
 	public bool IsAlive() {
 		return health > 0 && !knockedOut && gameManager.GameIsActive();
+	}
+
+	public bool IsRecentlyHit() {
+		return RecentlyHit;
+	}
+
+	public bool CanBeHit() {
+		return IsAlive () && !IsRecentlyHit ();
 	}
 }

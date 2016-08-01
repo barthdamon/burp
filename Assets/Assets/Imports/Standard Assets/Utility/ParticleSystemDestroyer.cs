@@ -20,6 +20,7 @@ namespace UnityStandardAssets.Utility
 
         private IEnumerator Start()
         {
+			/*
             var systems = GetComponentsInChildren<ParticleSystem>();
 
             // find out the maximum lifetime of any particles in this effect
@@ -47,9 +48,11 @@ namespace UnityStandardAssets.Utility
             BroadcastMessage("Extinguish", SendMessageOptions.DontRequireReceiver);
 
             // wait for any remaining particles to expire
-            yield return new WaitForSeconds(m_MaxLifetime);
-
-            Destroy(gameObject);
+//            yield return new WaitForSeconds(m_MaxLifetime);
+//
+//            Destroy(gameObject);
+*/
+			yield return new WaitForSeconds (200f);
         }
 
 

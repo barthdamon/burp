@@ -79,7 +79,7 @@ public class PlayerMove : MonoBehaviour {
 		float distance = direction.magnitude;
 //		direction.Normalize();
 		Vector3 force = direction.normalized * (explosiveForce / distance);
-		Debug.Log ("x: " + force.x + " y: " + force.y + " z: " + force.z);
+//		Debug.Log ("x: " + force.x + " y: " + force.y + " z: " + force.z);
 //		GetComponent<Rigidbody>().AddForce(1000,180,100, ForceMode.Impulse);
 //		GetComponent<Rigidbody>().AddForce(nDirection.x * force, nDirection.y * force, nDirection.z * force, ForceMode.Impulse);
 		Component[] children = GetComponentsInChildren(typeof(Rigidbody));
@@ -87,7 +87,7 @@ public class PlayerMove : MonoBehaviour {
 			children [i].GetComponent<Rigidbody> ().AddForce(force.x, force.y, 0, ForceMode.Impulse);
 //			children [i].GetComponent<Rigidbody> ().AddExplosionForce (explosiveForce, position, distance);
 		}
-		Debug.Log ("EXPLOSIVE FORCE BEING ADDED");
+//		Debug.Log ("EXPLOSIVE FORCE BEING ADDED");
 		playerManager.LostHealth (damageAmount);
 //		GetComponent<Rigidbody>().AddExplosionForce (explosiveForce, position, explosionRadius);
 	}
@@ -97,12 +97,15 @@ public class PlayerMove : MonoBehaviour {
 
 
 
-
+	void KickMove() {
+		// create a circle a little less than character lenght away from target pos either up or down depening on position relative to target pos
+		// Set heading around the target pos the when if reaches a heading that is the desired heading just continue on that heading
+	}
 
 
 	// AI METHODS
 	void ComputerMove() {
-		// Perhaps reduce the spee
+		// Perhaps reduce the speed
 		Vector3 nMovement = AI.GetCurrentHeading() * AI.GetCurrentSpeed();
 //		Debug.Log("Computer Moving... x:" + nMovement.x.ToString() + " y: " + nMovement.y.ToString());
 		Vector3 pos = transform.position;

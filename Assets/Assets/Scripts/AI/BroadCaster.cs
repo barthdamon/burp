@@ -15,20 +15,20 @@ public class BroadCaster : MonoBehaviour {
 	
 	}
 
-	public void SendMessage(Telegram Telegram)
+	public void RelayTelegram(Telegram Telegram)
 	{
 		// get the state machine and send the message to the state machine somehow!
 		ComputerPlayer.HandleMessage(Telegram);
 	}
 }
 
-public enum EMessage { PlayerScored, ComputerScored, PlayerContact, PlayerKnockedOut, ComputerKnockedOut };
+public enum EMessage { GoalScored, PlayerContact, KockOutOccured };
 public struct Telegram {
 
 	public EMessage Message;
-	public Object Sender;
+	public GameObject Sender;
 
-	public Telegram(EMessage Message, BroadCaster Sender)
+	public Telegram(EMessage Message, GameObject Sender)
 	{
 		this.Message = Message;
 		this.Sender = Sender;

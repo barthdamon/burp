@@ -33,11 +33,11 @@ public class BallExplosion : MonoBehaviour {
 
 	public void Explode() {
 		Collider[] colliders = Physics.OverlapSphere (transform.position, explosionRadius, playerMask);
-		Debug.Log ("COLLIDERS FOUND: " + colliders.Length);
+//		Debug.Log ("COLLIDERS FOUND: " + colliders.Length);
 		for (int i = 0; i < colliders.Length; i++) {
 			PlayerExplosiveRecognizer explosiveForceRecognizer = colliders [i].GetComponent<PlayerExplosiveRecognizer> ();
 			if (explosiveForceRecognizer) {
-				Debug.Log ("Player found");
+//				Debug.Log ("Player found");
 				// hard coded to back of the goal...
 				float xForce = transform.position.x < 0 ? -23 : 23;
 				Vector3 forcePosition = new Vector3(xForce, 0,0);
@@ -52,7 +52,7 @@ public class BallExplosion : MonoBehaviour {
 
 		explosionParticles.Play ();
 		explosionAudio.Play ();
-		Debug.Log ("DESTROYING");
+//		Debug.Log ("DESTROYING");
 
 		Destroy (explosionParticles.gameObject, explosionParticles.duration - 0.5f);
 		gameObject.GetComponent<Renderer>().enabled = false;
