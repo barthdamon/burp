@@ -9,6 +9,8 @@ public class Boundary {
 
 public class PlayerManager : MonoBehaviour {
 
+	public GameObject Model;
+
 	public int playerNumber;
 	public Boundary boundary;
 	public AudioSource hitSound;

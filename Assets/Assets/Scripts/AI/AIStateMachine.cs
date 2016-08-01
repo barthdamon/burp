@@ -26,6 +26,10 @@ public class AIStateMachine : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+
+	}
+
+	public void StartAI() {
 		m_GlobalState = new GlobalState(this, EState.Global);
 
 		StateSingletons = new List<State>();

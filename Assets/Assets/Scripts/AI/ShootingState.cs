@@ -61,8 +61,7 @@ public class ShootingState : State {
 	{
 		Debug.Log ("State Disregards Message");
 	}
-
-
+		
 
 
 
@@ -78,6 +77,13 @@ public class ShootingState : State {
 		//		Debug.Log ("Desired Traj: " + DesiredTrajectory);
 		// IF other player is in the way, and computer is outside shooting range, change the target pos to be a relative distance to the goal that produces a good angle to score (around the player)
 		Vector3 TargetPos;
+
+
+		// get the balls velocity and 
+		if (DesiredTrajectory.magnitude > DistanceToSpin) 
+		{
+			
+		}
 
 		Vector3 VectorToHuman = AI.HumanMove.transform.position - BallPos;
 		if (Vector3.Dot (VectorToHuman, DesiredTrajectory) > HumanPosAvoidConstant) {

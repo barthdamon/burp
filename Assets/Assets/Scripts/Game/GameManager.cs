@@ -9,12 +9,23 @@ public class GameManager : MonoBehaviour {
 
 	public Text gameOverText;
 	public Text winnerText;
-	public GameObject playAgainButton;
+	public Text pickModeText;
+	public GameObject playComputerButton;
+	public GameObject playPlayerButton;
+	public GameObject endGameButton;
 
 	public Text gameTimerText;
 
 	public GameObject ball;
+	public GameObject ActiveBall;
 	public AIStateMachine AI;
+
+
+	public PlayerManager PlayerOneManager;
+	public PlayerMove PlayerOneMove;
+
+	public PlayerManager PlayerTwoManager;
+	public PlayerMove PlayerTwoMove;
 
 	private bool gameActive = false;
 	private float endTime;
@@ -22,7 +33,9 @@ public class GameManager : MonoBehaviour {
 	private int teamTwoScore = 0;
 	// Use this for initialization
 	void Start () {
-		ResetGame ();
+//		ResetGame ();
+		gameOverText.enabled = false;
+		winnerText.enabled = false;
 	}
 	
 	// Update is called once per frame
@@ -38,9 +51,17 @@ public class GameManager : MonoBehaviour {
 	}
 
 	private void ResetGame() {
-		playAgainButton.SetActive(false);
+		pickModeText.enabled = false;
+		playComputerButton.SetActive(false);
+		playPlayerButton.SetActive (false);
 		gameOverText.enabled = false;
 		winnerText.enabled = false;
+		endGameButton.SetActive (true);
+
+		PlayerOneMove.ResetPosition ();
+		PlayerTwoMove.ResetPosition ();
+		PlayerOneManager.Model.SetActive (true);
+		PlayerTwoManager.Model.SetActive (true);
 		// Spawn a new ball, reset the characters to their spawn points, and destroy the old ball
 		teamOneScore = 0;
 		teamTwoScore = 0;
@@ -52,9 +73,21 @@ public class GameManager : MonoBehaviour {
 		gameActive = true;
 	}
 		
-	public void PlayAgainPressed() {
+	public void Play() {
+		Destroy (ActiveBall);
 		ResetGame ();
-		Application.LoadLevel (Application.loadedLevel);
+		SpawnBall ();
+	}
+
+	public void PVPButtonPressed() {
+		PlayerTwoMove.isComputerPlayer = false;
+		Play ();
+	}
+
+	public void PVCButtonPressed() {
+		PlayerTwoMove.isComputerPlayer = true;
+		Play ();
+		AI.StartAI ();
 	}
 
 
@@ -74,13 +107,18 @@ public class GameManager : MonoBehaviour {
 				teamTwoScoreText.text = teamTwoScore.ToString();
 				// dock points for team # 2
 			}
-			Vector3 spawnPoint = new Vector3 (0, 6, 0);
-			GameObject NewBall = Instantiate(ball, spawnPoint, Quaternion.identity) as GameObject;
-			AI.Ball = NewBall.GetComponent<BallMove> ();
+			SpawnBall ();
 		}
 	}
 
-	private void GameOver() {
+	private void SpawnBall() {
+		Vector3 spawnPoint = new Vector3 (0, 6, 0);
+		GameObject NewBall = Instantiate(ball, spawnPoint, Quaternion.identity) as GameObject;
+		AI.Ball = NewBall.GetComponent<BallMove> ();
+		ActiveBall = NewBall;
+	}
+
+	public void GameOver() {
 		Debug.Log ("GAME OVER");
 		gameActive = false;
 		if (teamOneScore == teamTwoScore) {
@@ -95,7 +133,10 @@ public class GameManager : MonoBehaviour {
 		}
 		winnerText.enabled = true;
 		gameOverText.enabled = true;
-		playAgainButton.SetActive(true);
+		pickModeText.enabled = true;
+		playComputerButton.SetActive(true);
+		playPlayerButton.SetActive (true);
+		endGameButton.SetActive (false);
 	}
 
 	private string StringToGameTime(int time) {

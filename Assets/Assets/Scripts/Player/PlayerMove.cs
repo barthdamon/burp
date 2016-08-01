@@ -74,6 +74,14 @@ public class PlayerMove : MonoBehaviour {
 		}
 	}
 
+	public void ResetPosition() {
+		if (playerManager.playerNumber == 1) {
+			transform.position = new Vector3 (6f,1f,0f);
+		} else {
+			transform.position = new Vector3 (-6f,1f,0f);
+		}
+	}
+
 
 	public void ExplosiveForceAdded(float explosiveForce, Vector3 position, float damageAmount) {
 		Vector3 direction = transform.position - position;
