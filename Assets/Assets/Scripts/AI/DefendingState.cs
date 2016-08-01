@@ -8,7 +8,7 @@ public class DefendingState : State {
 	Vector3 GoalPos = new Vector3(-20f,0f,0f);
 	float BlockingDistancePercentageScalar = 3f;
 	float DistanceToFullGoalBlocking = 5f;
-	float PercentageCloserThanPlayer = 0.7f;
+	float PercentageCloserThanPlayer = 0.5f;
 
 	public DefendingState(AIStateMachine AI, EState EState)
 	{

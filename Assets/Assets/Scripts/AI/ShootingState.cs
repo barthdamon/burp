@@ -5,7 +5,7 @@ using System.Collections;
 public class ShootingState : State {
 
 	// Constants
-	float BallOffset = 0.5f;
+	float BallOffset = .5f;
 	float ShootingRange = 1f;
 	float SlowDownRange = 3f;
 
@@ -70,6 +70,8 @@ public class ShootingState : State {
 	{
 		// First get the position of the ball
 		Vector3 BallPos = AI.Ball.transform.position;
+		// calculate the future pos of the ball, and aim for that...
+//		Vector3 BallPos = CurrentBallPos + AI.Ball.GetComponent<Rigidbody>().velocity.normalized * AI.Ball.GetComponent<Rigidbody>().velocity.magnitude;
 
 		// Find the vector from the goal to the ball
 		Vector3 DesiredTrajectory = BallPos - GoalPos;

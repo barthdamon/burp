@@ -5,7 +5,6 @@ using System.Collections.Generic;
 
 public class PlayerMove : MonoBehaviour {
 
-	float speed = 10;
 	public float ragdollBlendAmount = 0.5f;
 	public PlayerManager playerManager;
 
@@ -17,6 +16,8 @@ public class PlayerMove : MonoBehaviour {
 
 
 	Rigidbody rb;
+	float speed = 10;
+	float ProbeLength = 0.5f;
 
 
 //	//Declare a class that will hold useful information for each body part
@@ -91,16 +92,6 @@ public class PlayerMove : MonoBehaviour {
 		playerManager.LostHealth (damageAmount);
 //		GetComponent<Rigidbody>().AddExplosionForce (explosiveForce, position, explosionRadius);
 	}
-		
-
-
-
-
-
-	void KickMove() {
-		// create a circle a little less than character lenght away from target pos either up or down depening on position relative to target pos
-		// Set heading around the target pos the when if reaches a heading that is the desired heading just continue on that heading
-	}
 
 
 	// AI METHODS
@@ -111,9 +102,33 @@ public class PlayerMove : MonoBehaviour {
 		Vector3 pos = transform.position;
 		pos.z = Mathf.Clamp(transform.position.z, 0, 0);
 		transform.position = pos;
+
 		if (playerManager.IsAlive()) {
-			rb.velocity = nMovement;
+			rb.velocity = FitToBounds(transform.position, nMovement);
 		}
+	}
+
+	private Vector3 FitToBounds(Vector3 Position, Vector3 nMovement)
+	{
+		Vector3 Probe = nMovement;
+		if (Position.x > 20 || Position.x < -20)
+		{
+			if (nMovement.y > 0) {
+				Probe = new Vector3 (0, 1, 0);
+			} else {
+				Probe = new Vector3 (0, -1, 0);
+			}
+		}
+
+		if (Position.y > 7.9 || Position.y < -7.9)
+		{
+			if (nMovement.x > 0) {
+				Probe = new Vector3 (1, 0, 0);
+			} else {
+				Probe = new Vector3 (-1, 0, 0);
+			}
+		}
+		return Probe;
 	}
 		
 }

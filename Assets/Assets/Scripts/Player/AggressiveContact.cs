@@ -20,6 +20,7 @@ public class AggressiveContact : MonoBehaviour {
 	void Update () {
 		Vector3 pos = transform.position;
 		pos.y = Mathf.Clamp(transform.position.y, -7.9f, 7.9f);
+		pos.z = Mathf.Clamp (transform.position.z, -0.05f, 0.05f);
 		transform.position = pos;
 	}
 
