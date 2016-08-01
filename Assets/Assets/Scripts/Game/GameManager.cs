@@ -34,6 +34,7 @@ public class GameManager : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 //		ResetGame ();
+		endGameButton.SetActive(false);
 		gameOverText.enabled = false;
 		winnerText.enabled = false;
 	}
