@@ -29,7 +29,10 @@ public class EvadingState : State {
 
 		Vector3 AvoidRoute = ComputerPos - PlayerPos;
 
-		if (AvoidRoute.magnitude > 7f)
+		if (AvoidRoute.magnitude > 7f) {
+			AI.ChangeState (EState.Defending);
+		}
+
 		AI.SetCurrentHeading (AvoidRoute.normalized);
 	}
 
