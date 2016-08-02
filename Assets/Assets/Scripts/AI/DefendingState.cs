@@ -7,7 +7,7 @@ public class DefendingState : State {
 	// Need the static position of the center of the goal
 	Vector3 GoalPos = new Vector3(-20f,0f,0f);
 	float BlockingDistancePercentageScalar = 3f;
-	float DistanceToFullGoalBlocking = 5f;
+	float DistanceToFullGoalBlocking = 7f;
 	float PercentageCloserThanPlayer = 0.5f;
 
 	public DefendingState(AIStateMachine AI, EState EState)
@@ -18,7 +18,7 @@ public class DefendingState : State {
 
 	// Called when entering this state
 	public override void Enter() {
-		Debug.Log ("Entering Defending State");
+//		Debug.Log ("Entering Defending State");
 	}
 
 	// Called when exiting this state
@@ -30,9 +30,9 @@ public class DefendingState : State {
 
 		// if comptuer is way closer to the ball than the player, start shooting
 		Vector3 BallPos = AI.Ball.transform.position;
-		float PlayerToBall = (BallPos - AI.HumanMove.transform.position).magnitude;
-		float ComputerToBall = (BallPos - AI.ComputerMove.transform.position).magnitude;
-		if (PlayerToBall / (PlayerToBall + ComputerToBall) >= PercentageCloserThanPlayer) {
+		Vector3 PlayerToBall = (BallPos - AI.HumanMove.transform.position);
+		Vector3 ComputerToBall = (BallPos - AI.ComputerMove.transform.position);
+		if ((PlayerToBall.magnitude / (PlayerToBall.magnitude + ComputerToBall.magnitude) >= PercentageCloserThanPlayer) && ComputerToBall.x > 0f) {
 			AI.ChangeState (EState.Shooting);
 			return;
 		}
@@ -57,6 +57,15 @@ public class DefendingState : State {
 			break;
 		case EMessage.GoalScored:
 			AI.ChangeState (EState.Shooting);
+			break;
+		case EMessage.ComputerLowHealth:
+			AI.ChangeState (EState.Evading);
+			break;
+		case EMessage.PlayerLowHealth:
+			// dont wait to attack if you already have the human beat
+			if (AI.ComputerMove.transform.position.x - AI.HumanMove.transform.position.x > 0) {
+				AI.ChangeState (EState.Attacking);
+			}
 			break;
 		default:
 			break;

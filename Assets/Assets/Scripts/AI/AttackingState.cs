@@ -20,13 +20,30 @@ public class AttackingState : State {
 
 	// Called when in this state
 	public override void Execute() {
+		CheckForChangeState ();
+		
+		Vector3 PlayerPos = AI.HumanMove.transform.position;
+		Vector3 ComputerPos = AI.ComputerMove.transform.position;
+
+		Vector3 ComputerToHuman = PlayerPos - ComputerPos;
+
+		AI.SetCurrentHeading (ComputerToHuman.normalized);
 	}
 
 	// Called when state recieves a message
 	public override void HandleMessage(Telegram Telegram)
 	{
-		Debug.Log ("State Disregards Message");
 	}
 
-
+	private bool CheckForChangeState () 
+	{
+		// will naturally go on defense, just check if should go on offense here
+			// If the ball is past the player and the computer is past the player then start shooting
+		if (AI.BallBehindPlayer () && AI.ComputerBehindPlayer ()) {
+			AI.ChangeState (EState.Shooting);
+			return true;
+		} else {
+			return false;
+		}
+	}
 }

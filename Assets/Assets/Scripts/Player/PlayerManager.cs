@@ -94,6 +94,10 @@ public class PlayerManager : MonoBehaviour {
 		}
 	}
 
+	public bool LowHealth() {
+		return health < 25 && IsAlive();
+	}
+
 	public void PlayHitSound() {
 		hitSound.Play ();
 	}

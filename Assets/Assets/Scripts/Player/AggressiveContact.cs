@@ -9,7 +9,7 @@ public class AggressiveContact : MonoBehaviour {
 
 	private ParticleSystem hitParticles;
 	private PlayerManager playerManager;
-	private float explosionForce = 3f;
+	private float ExplosiveDampener = 2f;
 
 	// Use this for initialization
 	void Start () {
@@ -75,7 +75,7 @@ public class AggressiveContact : MonoBehaviour {
 			} else {
 				playerManager.PlayDeflectSound ();
 			}
-			playerMove.ExplosiveForceAdded (explosionForce, otherPlayerPart.transform.position, amountDamaged);
+			playerMove.ExplosiveForceAdded (otherPlayerMove.GetComponent<Rigidbody>().velocity.magnitude * ExplosiveDampener, otherPlayerPart.transform.position, amountDamaged);
 		}
 	}
 

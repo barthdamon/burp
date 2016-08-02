@@ -24,7 +24,6 @@ public abstract class State {
 	// Called when state recieves a message
 	public virtual void HandleMessage(Telegram Telegram)
 	{
-		Debug.Log ("State Disregards Message");
 	}
 
 }

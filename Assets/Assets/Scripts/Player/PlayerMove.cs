@@ -87,7 +87,7 @@ public class PlayerMove : MonoBehaviour {
 		Vector3 direction = transform.position - position;
 		float distance = direction.magnitude;
 //		direction.Normalize();
-		Vector3 force = direction.normalized * (explosiveForce / distance);
+		Vector3 force = direction.normalized * explosiveForce;
 //		Debug.Log ("x: " + force.x + " y: " + force.y + " z: " + force.z);
 //		GetComponent<Rigidbody>().AddForce(1000,180,100, ForceMode.Impulse);
 //		GetComponent<Rigidbody>().AddForce(nDirection.x * force, nDirection.y * force, nDirection.z * force, ForceMode.Impulse);
@@ -119,23 +119,23 @@ public class PlayerMove : MonoBehaviour {
 	private Vector3 FitToBounds(Vector3 Position, Vector3 nMovement)
 	{
 		Vector3 Probe = nMovement;
-		if (Position.x > 20 || Position.x < -20)
-		{
-			if (nMovement.y > 0) {
-				Probe = new Vector3 (0, 1, 0);
-			} else {
-				Probe = new Vector3 (0, -1, 0);
-			}
-		}
-
-		if (Position.y > 7.9 || Position.y < -7.9)
-		{
-			if (nMovement.x > 0) {
-				Probe = new Vector3 (1, 0, 0);
-			} else {
-				Probe = new Vector3 (-1, 0, 0);
-			}
-		}
+//		if (Position.x > 20 || Position.x < -20)
+//		{
+//			if (nMovement.y > 0) {
+//				Probe = new Vector3 (0, 1, 0);
+//			} else {
+//				Probe = new Vector3 (0, -1, 0);
+//			}
+//		}
+//
+//		if (Position.y > 7.9 || Position.y < -7.9)
+//		{
+//			if (nMovement.x > 0) {
+//				Probe = new Vector3 (1, 0, 0);
+//			} else {
+//				Probe = new Vector3 (-1, 0, 0);
+//			}
+//		}
 		return Probe;
 	}
 		

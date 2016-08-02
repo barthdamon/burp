@@ -4,8 +4,13 @@ using System.Collections;
 [System.Serializable]
 public class GlobalState : State {
 
+	float BallDodgeDistance = 3f;
 	float HumanPosAvoidConstant = 0.3f;
 	Vector3 GoalPos = new Vector3(20f,0f,0f);
+
+	float DistanceToAttackEvade = 5f;
+	EMessage MessageToSend;
+
 
 	public GlobalState(AIStateMachine AI, EState EState)
 	{
@@ -34,19 +39,62 @@ public class GlobalState : State {
 		Vector3 DesiredTrajectory = BallPos - GoalPos;
 		Vector3 VectorToHuman = AI.HumanMove.transform.position - BallPos;
 
-		// If the computer is on the wrong side of the ball, 
-		// and the human is on their correct side and the human is lined up to hit the ball
-		// within a certain range of the ball, then go on defense
-		// also not on the opponents end
+		if (DetermineIfHealthLow()) {
+			Telegram Telegram = new Telegram (MessageToSend, null);
+			AI.HandleMessage (Telegram);
+		}
+
+
+		// Override current heading to make sure doesnt hit ball into its own goal
+		Vector3 ComputerToBall = BallPos - ComputerPos;
+		if (ComputerToBall.x < 0 && ComputerToBall.magnitude < BallDodgeDistance && AI.Ball.transform.position.y > - 5) {
+			Vector3 NewHeading = AI.GetCurrentHeading();
+			AI.SetCurrentHeading(CalculateAvoidBallTrajectory(NewHeading));
+		}
+
 		if (((BallPos - ComputerPos).x < 0) && ((BallPos - HumanPos).x < 0) && BallPos.x < 15 && AI.HumanPlayer.IsAlive()) {
 			AI.ChangeState (EState.Defending);
 		}
+
+		// Do something to change the current heading so that it doesn't jam into the wall here.....
+		AI.SetCurrentHeading(RasberryJam());
 	}
 
 	// Called when state recieves a message
-	public override void HandleMessage(Telegram Telegram)
-	{
-		Debug.Log ("State Disregards Message");
+	public override void HandleMessage(Telegram Telegram) {}
 
+	private bool DetermineIfHealthLow() {
+		float PlayerDistance = (AI.ComputerMove.transform.position - AI.HumanMove.transform.position).magnitude;
+		if (AI.HumanPlayer.LowHealth() && AI.ComputerManager.LowHealth()) {
+			return false;
+		} else if (AI.HumanPlayer.LowHealth() && PlayerDistance < DistanceToAttackEvade) {
+			MessageToSend = EMessage.PlayerLowHealth;
+			return true;
+		} else if (AI.ComputerManager.LowHealth() && PlayerDistance < DistanceToAttackEvade) {
+			MessageToSend = EMessage.ComputerLowHealth;
+			return true;
+		}
+		return false;
+	}
+
+	private Vector3 CalculateAvoidBallTrajectory(Vector3 Dest) {
+		// set a course 45degrees up or down from target pos vector depending on which is closer
+		Vector3 AvoidBallTrajectory;
+		if (Dest.y > 0 && AI.Ball.transform.position.y > 3) {
+			// below the ball
+			//			Debug.Log ("greater than y");
+			AvoidBallTrajectory = new Vector3(-1 * Mathf.Cos(Dest.x - (Mathf.PI / 4)), Mathf.Sin(Dest.y - (Mathf.PI / 4)), 0f);
+			return AvoidBallTrajectory.normalized;
+		} else {
+			// above the ball
+			//			Debug.Log ("Less than y");
+			AvoidBallTrajectory = new Vector3(Mathf.Cos(Dest.x + (Mathf.PI / 4)), Mathf.Sin(Dest.y + (Mathf.PI / 4)), 0f);
+			return AvoidBallTrajectory.normalized;
+		}
+	}
+
+	private Vector3 RasberryJam() {
+		// clamp the heading normals so that it doesnt try to go through walls
+		return AI.GetCurrentHeading();
 	}
 }

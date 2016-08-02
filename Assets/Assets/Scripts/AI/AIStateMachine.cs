@@ -24,6 +24,7 @@ public class AIStateMachine : MonoBehaviour {
 	private Vector3 CurrentHeading;
 	private float CurrentSpeed = 10f;
 
+
 	// Use this for initialization
 	void Start () {
 
@@ -47,8 +48,8 @@ public class AIStateMachine : MonoBehaviour {
 		if (CurrentState != null && m_GlobalState != null) 
 		{
 //			Debug.Log ("AI MACHINE EXECUTING");
-			m_GlobalState.Execute ();
 			CurrentState.Execute ();
+			m_GlobalState.Execute ();
 		}
 	}
 
@@ -74,7 +75,9 @@ public class AIStateMachine : MonoBehaviour {
 		State NewState = FetchState (NewStateEState);
 		if (NewState != null && NewState != CurrentState)
 		{
-			Debug.Log ("AI Changing state");
+			if (CurrentState != null) {
+				Debug.Log ("AI Changing state from : " + CurrentState.EState + ", to: " + NewState.EState);
+			}
 			PreviusState = CurrentState;
 			CurrentState = NewState;
 
@@ -114,6 +117,20 @@ public class AIStateMachine : MonoBehaviour {
 	public float GetCurrentSpeed()
 	{
 		return CurrentSpeed;
+	}
+
+
+	// Math Calculation Helpers
+	public bool BallBehindPlayer() {
+		Vector3 BallPos = Ball.transform.position;
+		Vector3 PlayerPos = HumanMove.transform.position;
+		return BallPos.x > PlayerPos.x;
+	}
+
+	public bool ComputerBehindPlayer() {
+		Vector3 ComputerPos = ComputerMove.transform.position;
+		Vector3 PlayerPos = HumanMove.transform.position;
+		return ComputerPos.x > PlayerPos.x;
 	}
 
 }

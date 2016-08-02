@@ -22,7 +22,7 @@ public class BroadCaster : MonoBehaviour {
 	}
 }
 
-public enum EMessage { GoalScored, PlayerContact, KockOutOccured };
+public enum EMessage { GoalScored, PlayerContact, KockOutOccured, PlayerLowHealth, ComputerLowHealth };
 public struct Telegram {
 
 	public EMessage Message;
