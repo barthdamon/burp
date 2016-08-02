@@ -3,7 +3,7 @@ using System.Collections;
 
 public class AggressiveContact : MonoBehaviour {
 
-	public float damageAmount = 15f;
+	public float damageAmount = 25f;
 	public bool passive = true;
 	public ParticleSystem hitParticlePrefab;
 

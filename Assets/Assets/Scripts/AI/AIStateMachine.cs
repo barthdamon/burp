@@ -92,7 +92,9 @@ public class AIStateMachine : MonoBehaviour {
 
 	public void HandleMessage(Telegram Telegram) 
 	{
-		CurrentState.HandleMessage (Telegram);
+		if (CurrentState != null) {
+			CurrentState.HandleMessage (Telegram);
+		}
 	}
 
 

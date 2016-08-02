@@ -10,7 +10,7 @@ public class BallExplosion : MonoBehaviour {
 	public Material ballMaterial;
 
 	private float explosionRadius = 20f;
-	private float explosionForce = 50f;
+	private float explosionForce = 40f;
 	private float goalDepth = 3;
 
 

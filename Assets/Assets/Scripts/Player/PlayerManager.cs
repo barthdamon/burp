@@ -23,6 +23,7 @@ public class PlayerManager : MonoBehaviour {
 	public BroadCaster Broadcaster;
 
 	private bool knockedOut = false;
+	private float LastHit = 0f;
 	private float health = 100;
 
 	private bool RecentlyHit = false;
@@ -39,10 +40,18 @@ public class PlayerManager : MonoBehaviour {
 		Vector3 pos = transform.position;
 		pos.z = Mathf.Clamp(transform.position.z, 0, 0);
 		transform.position = pos;
+
+		if (health < 100 && IsAlive() && Time.time > LastHit + 5f) {
+			health += 0.05f;
+			playerHealthSlider.value = health / 100;
+		}
 	}
 
 	public void LostHealth (float amount) {
 		if (!knockedOut) {
+			if (amount > 0) {
+				LastHit = Time.time;
+			}
 			health -= amount;
 			RecentlyHit = true;
 			StartCoroutine (ResetHittable ());
