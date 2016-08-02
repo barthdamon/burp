@@ -1063,7 +1063,7 @@ RectTransform:
   m_RootOrder: 5
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 90}
+  m_AnchoredPosition: {x: 0, y: 94.30002}
   m_SizeDelta: {x: 399, y: 75}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &751260484
@@ -1098,9 +1098,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'GAME OVER
-
-'
+  m_Text: Burp (v 1.0.9)
 --- !u!222 &751260485
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1337,8 +1335,8 @@ RectTransform:
   m_RootOrder: 6
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 22.699997}
-  m_SizeDelta: {x: 242.4, y: 45.4}
+  m_AnchoredPosition: {x: 0.000006198883, y: 28.400011}
+  m_SizeDelta: {x: 303.4, y: 56.8}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1001806417
 MonoBehaviour:
@@ -1352,7 +1350,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.91379315, g: 0.84344053, b: 0.31579614, a: 1}
+  m_Color: {r: 0.91379315, g: 0.91379315, b: 0.91379315, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -1372,7 +1370,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Yellow Wins!
+  m_Text: A One Sec Game
 --- !u!222 &1001806418
 CanvasRenderer:
   m_ObjectHideFlags: 0

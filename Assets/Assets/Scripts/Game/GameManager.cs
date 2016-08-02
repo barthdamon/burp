@@ -35,8 +35,8 @@ public class GameManager : MonoBehaviour {
 	void Start () {
 //		ResetGame ();
 		endGameButton.SetActive(false);
-		gameOverText.enabled = false;
-		winnerText.enabled = false;
+//		gameOverText.enabled = false;
+//		winnerText.enabled = false;
 	}
 	
 	// Update is called once per frame

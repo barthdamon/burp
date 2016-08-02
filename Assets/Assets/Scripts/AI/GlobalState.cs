@@ -71,8 +71,11 @@ public class GlobalState : State {
 			MessageToSend = EMessage.PlayerLowHealth;
 			return true;
 		} else if (AI.ComputerManager.LowHealth() && PlayerDistance < DistanceToAttackEvade) {
-			MessageToSend = EMessage.ComputerLowHealth;
-			return true;
+			if ((GoalPos - AI.Ball.transform.position).magnitude > 5f) {
+				// dont ever want to evade when the player is about to score
+				MessageToSend = EMessage.ComputerLowHealth;
+				return true;
+			}
 		}
 		return false;
 	}

@@ -4,6 +4,8 @@ using System.Collections;
 [System.Serializable]
 public class EvadingState : State {
 
+	Vector3 GoalPos = new Vector3(-20f,0f,0f);
+
 	public EvadingState(AIStateMachine AI, EState EState)
 	{
 		this.AI = AI;
@@ -26,6 +28,8 @@ public class EvadingState : State {
 		Vector3 ComputerPos = AI.ComputerMove.transform.position;
 
 		Vector3 AvoidRoute = ComputerPos - PlayerPos;
+
+		if (AvoidRoute.magnitude > 7f)
 		AI.SetCurrentHeading (AvoidRoute.normalized);
 	}
 
@@ -39,6 +43,9 @@ public class EvadingState : State {
 		// will naturally go on defense, just check if should go on offense here
 		if (AI.BallBehindPlayer () && AI.ComputerBehindPlayer ()) {
 			AI.ChangeState (EState.Shooting);
+			return true;
+		} else if ((GoalPos - AI.Ball.transform.position).magnitude < 5f) {
+			AI.ChangeState (EState.Defending);
 			return true;
 		} else {
 			return false;
