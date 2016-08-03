@@ -33,4 +33,15 @@ public class BallMove : MonoBehaviour {
 		}
 	}
 
+	public Vector3 GetFuturePositionFromDistance(float Distance, float Speed)
+	{
+		// take the distance and figure out how 
+		Vector3 CurrentPos = transform.position;
+		Vector3 Velocity = GetComponent<Rigidbody> ().velocity;
+		float TimeToReach = Distance / Speed;
+		Vector3 WhereToGo = CurrentPos + (Velocity * TimeToReach);
+		return WhereToGo;
+
+	}
+
 }

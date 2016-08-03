@@ -18,7 +18,7 @@ public class ShootingState : State {
 	Vector3 GoalPos = new Vector3(20f,0f,0f);
 
 	// the constant for how close the human needs to be in shooting range to shoot at walls instead
-	float HumanPosAvoidConstant = 0.3f;
+	float HumanPosAvoidConstant = 0.8f;
 
 	float DistanceToSpin = 10f;
 
@@ -82,29 +82,31 @@ public class ShootingState : State {
 	{
 		// First get the position of the ball
 		Vector3 BallPos = AI.Ball.transform.position;
+//		if (AI.ComputerDistanceToBall () < 5f) {
+//			BallPos = AI.Ball.transform.position;
+//		} else {
+//			BallPos = AI.Ball.GetFuturePositionFromDistance (AI.ComputerDistanceToBall (), AI.GetCurrentSpeed ());
+//		}
+
 		Vector3 DesiredTrajectory = BallPos - GoalPos;
 		Vector3 TargetPos;
 
-		/*
+		Vector3 Dest = DesiredTrajectory.normalized;
+		TargetPos = BallPos + (Dest * BallOffset);
+		//		Debug.Log ("Target Pos: " + TargetPos);
+
 		// IF other player is in the way, and computer is outside shooting range, change the target pos to be a relative distance to the goal that produces a good angle to score (around the player)
 		Vector3 VectorToHuman = AI.HumanMove.transform.position - BallPos;
-		if (Vector3.Dot (VectorToHuman, DesiredTrajectory) > HumanPosAvoidConstant) {
-			// get cross product with the goal being the destination to find the position on the wall it needs to get to
-		} else {
-
+		if ((Vector3.Dot (VectorToHuman, DesiredTrajectory) > HumanPosAvoidConstant) && DesiredTrajectory.magnitude > 5) {
+			// Human is in the way, try to shoot around him
+			Vector3 ScorePastHumanTrajectory = new Vector3(Mathf.Cos(Dest.x - (Mathf.PI / 8)), Mathf.Sin(Dest.y - (Mathf.PI / 8)), 0f);
+			TargetPos = BallPos + (ScorePastHumanTrajectory * BallOffset);
 		}
-		*/
+
 		if (ShotOnTarget (BallPos)) {
 			Debug.Log("Ball on target");
 			return new Vector3 (0f, 0f, 0f);
 		}
-
-		// If far away, go to the future position of the ball relative to how long it will take you to get there
-
-
-
-		TargetPos = BallPos + (DesiredTrajectory.normalized * BallOffset);
-		//		Debug.Log ("Target Pos: " + TargetPos);
 
 		return TargetPos;
 

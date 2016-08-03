@@ -88,17 +88,28 @@ public class GlobalState : State {
 	private Vector3 CalculateAvoidBallTrajectory(Vector3 Dest) {
 		// set a course 45degrees up or down from target pos vector depending on which is closer
 		Vector3 AvoidBallTrajectory;
-		if (Dest.y > 0 && AI.Ball.transform.position.y > 3) {
-			// below the ball
-			//			Debug.Log ("greater than y");
-			AvoidBallTrajectory = new Vector3(-1 * Mathf.Cos(Dest.x - (Mathf.PI / 4)), Mathf.Sin(Dest.y - (Mathf.PI / 4)), 0f);
-			return AvoidBallTrajectory.normalized;
+		if (AI.Ball.transform.position.y > -1) {
+			if (AI.ComputerMove.transform.position.y > 0) {
+				// below the ball
+				//			Debug.Log ("greater than y");
+				AvoidBallTrajectory = new Vector3 (Mathf.Cos (Dest.x - (Mathf.PI / 4)), Mathf.Sin (Dest.y - (Mathf.PI / 4)), 0f);
+				if (AvoidBallTrajectory.x > 0) {
+					AvoidBallTrajectory.x *= -1;
+				}
+				return AvoidBallTrajectory.normalized;
+			} else {
+				// above the ball
+				//			Debug.Log ("Less than y");
+				AvoidBallTrajectory = new Vector3 (Mathf.Cos (Dest.x - (Mathf.PI / 4)), Mathf.Sin (Dest.y - (Mathf.PI / 4)), 0f);
+				if (AvoidBallTrajectory.x > 0) {
+					AvoidBallTrajectory.x *= -1;
+				}
+				return AvoidBallTrajectory.normalized;
+			}
 		} else {
-			// above the ball
-			//			Debug.Log ("Less than y");
-			AvoidBallTrajectory = new Vector3(Mathf.Cos(Dest.x + (Mathf.PI / 4)), Mathf.Sin(Dest.y + (Mathf.PI / 4)), 0f);
-			return AvoidBallTrajectory.normalized;
+			return Dest;
 		}
+
 	}
 
 	private Vector3 RasberryJam() {

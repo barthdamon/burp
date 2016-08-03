@@ -20,9 +20,10 @@ AudioMixerController:
     - cb0eeb5b2cd9647d7857ea852f0359f7
     - c3010b3a13653402c83eae64daa1068f
     - ceea269f9b47d4e62893fe838029bec8
+    - 4c2a5f9e0782b468daea3a310db97669
     name: View
   m_CurrentViewIndex: 0
-  m_TargetSnapshot: {fileID: 24500003}
+  m_TargetSnapshot: {fileID: 24536128}
 --- !u!243 &24300001
 AudioMixerGroupController:
   m_ObjectHideFlags: 0
@@ -34,10 +35,28 @@ AudioMixerGroupController:
   m_Children:
   - {fileID: 24373760}
   - {fileID: 24346132}
+  - {fileID: 24301384}
   m_Volume: 97b8cd9482cca4cb496f53d2e4fa078f
   m_Pitch: 20812af8455f64cdfa17f432335c685f
   m_Effects:
   - {fileID: 24400002}
+  m_UserColorIndex: 0
+  m_Mute: 0
+  m_Solo: 0
+  m_BypassEffects: 0
+--- !u!243 &24301384
+AudioMixerGroupController:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: Grunts
+  m_AudioMixer: {fileID: 24100000}
+  m_GroupID: 4c2a5f9e0782b468daea3a310db97669
+  m_Children: []
+  m_Volume: 66287c1d21f9b49bb8120982d28927e3
+  m_Pitch: 9ab4afae5882a46c4928600eaae7a7e3
+  m_Effects:
+  - {fileID: 24477422}
   m_UserColorIndex: 0
   m_Mute: 0
   m_Solo: 0
@@ -115,6 +134,19 @@ AudioMixerEffectController:
   m_SendTarget: {fileID: 0}
   m_EnableWetMix: 0
   m_Bypass: 0
+--- !u!244 &24477422
+AudioMixerEffectController:
+  m_ObjectHideFlags: 3
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: 
+  m_EffectID: 4c12695a7f477421388542c45d93fcae
+  m_EffectName: Attenuation
+  m_MixLevel: 65287bd165ca84b5faeb1c3beda40eee
+  m_Parameters: []
+  m_SendTarget: {fileID: 0}
+  m_EnableWetMix: 0
+  m_Bypass: 0
 --- !u!245 &24500003
 AudioMixerSnapshotController:
   m_ObjectHideFlags: 0
@@ -126,6 +158,7 @@ AudioMixerSnapshotController:
   m_FloatValues:
     3b44f7e65746249148a105acfb544de6: -9.960266
     50739947ccfd646d4a543c5ac9facaf5: -80
+    66287c1d21f9b49bb8120982d28927e3: -80
   m_TransitionOverrides: {}
 --- !u!245 &24536128
 AudioMixerSnapshotController:
@@ -137,5 +170,6 @@ AudioMixerSnapshotController:
   m_SnapshotID: 47922f99e506f44ed821ad10f97a74f3
   m_FloatValues:
     3b44f7e65746249148a105acfb544de6: -80
-    50739947ccfd646d4a543c5ac9facaf5: 20
+    50739947ccfd646d4a543c5ac9facaf5: 10.437403
+    66287c1d21f9b49bb8120982d28927e3: -13.0627575
   m_TransitionOverrides: {}

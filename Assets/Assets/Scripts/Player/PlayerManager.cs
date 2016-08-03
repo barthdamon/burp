@@ -62,7 +62,7 @@ public class PlayerManager : MonoBehaviour {
 				health = 0;
 				knockedOut = true;
 				Debug.Log ("HEALTH OUT, RESETTING");
-				Telegram NewTelegram = new Telegram (EMessage.KockOutOccured, GetComponent<GameObject>());
+				Telegram NewTelegram = new Telegram (EMessage.KnockOutOccured, GetComponent<GameObject>());
 				Broadcaster.RelayTelegram (NewTelegram);
 				StartCoroutine (RechargeHealth ());
 			}

@@ -50,7 +50,7 @@ public class DefendingState : State {
 	public override void HandleMessage(Telegram Telegram)
 	{
 		switch (Telegram.Message) {
-		case EMessage.KockOutOccured:
+		case EMessage.KnockOutOccured:
 			if (Telegram.Sender == AI.HumanPlayer.GetComponent<GameObject> ()) {
 				AI.ChangeState (EState.Shooting);
 			}
@@ -75,7 +75,7 @@ public class DefendingState : State {
 	private Vector3 CalculateTargetPos()
 	{
 		// First get the position of the ball
-		Vector3 BallPos = AI.Ball.transform.position;
+		Vector3 BallPos = AI.Ball.GetFuturePositionFromDistance(AI.ComputerDistanceToBall(), AI.GetCurrentSpeed());
 
 		// Find the vector from the ball to the goal
 		Vector3 DesiredTrajectory = BallPos - GoalPos;
@@ -97,28 +97,18 @@ public class DefendingState : State {
 	{
 		Vector3 ComputerPlayerPos = AI.ComputerMove.transform.position;
 		Vector3 DistanceToDestination = TargetPosition - ComputerPlayerPos;
+		return DistanceToDestination.normalized;
 
-		Vector3 DistanceToBall = AI.Ball.transform.position - ComputerPlayerPos;
-		if (DistanceToBall.magnitude > 0.5) {
-			return DistanceToDestination.normalized;
-		} else {
-			return CalculateAvoidBallTrajectory (DistanceToDestination.normalized);
-		}
+//		Vector3 ComputerVectorToBall = AI.Ball.transform.position - ComputerPlayerPos;
+//		if (ComputerVectorToBall.x > 0.5) {
+//			return DistanceToDestination.normalized;
+//		} else if ((GoalPos - ComputerPlayerPos).magnitude < 3) {
+//			// computer is too close to the goal to try and dodge
+//			return DistanceToDestination.normalized;
+//		} else {
+//			return CalculateAvoidBallTrajectory (DistanceToDestination.normalized);
+//		}
 		// If about the hit the ball, steer away from it, otherwise just go there
-	}
-
-	private Vector3 CalculateAvoidBallTrajectory(Vector3 Dest) {
-		// set a course 45degrees up or down from target pos vector depending on which is closer
-		Vector3 AvoidBallTrajectory;
-		if (Dest.y > 0) {
-			// below the ball
-			AvoidBallTrajectory = new Vector3(Mathf.Cos(Dest.x - (Mathf.PI / 4)), Mathf.Sin(Dest.y - (Mathf.PI / 4)), 0f);
-			return AvoidBallTrajectory.normalized;
-		} else {
-			// above the ball
-			AvoidBallTrajectory = new Vector3(Mathf.Cos(Dest.x + (Mathf.PI / 4)), Mathf.Sin(Dest.y + (Mathf.PI / 4)), 0f);
-			return AvoidBallTrajectory.normalized;
-		}
 	}
 
 }

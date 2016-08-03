@@ -39,6 +39,18 @@ public class EvadingState : State {
 	// Called when state recieves a message
 	public override void HandleMessage(Telegram Telegram)
 	{
+		switch (Telegram.Message) {
+		case EMessage.KnockOutOccured:
+			if (Telegram.Sender == AI.HumanPlayer.GetComponent<GameObject> ()) {
+				AI.ChangeState (EState.Shooting);
+			} else {
+				AI.ChangeState (EState.Defending);
+			}
+			break;
+		case EMessage.PlayerLowHealth:
+			AI.ChangeState (EState.Shooting);
+			break;
+		}
 	}
 
 	private bool CheckForChangeState () 

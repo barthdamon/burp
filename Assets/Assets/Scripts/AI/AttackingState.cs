@@ -33,6 +33,15 @@ public class AttackingState : State {
 	// Called when state recieves a message
 	public override void HandleMessage(Telegram Telegram)
 	{
+		switch (Telegram.Message) {
+		case EMessage.KnockOutOccured:
+			if (Telegram.Sender == AI.HumanPlayer.GetComponent<GameObject> ()) {
+				AI.ChangeState (EState.Shooting);
+			} else {
+				AI.ChangeState (EState.Defending);
+			}
+			break;
+		}
 	}
 
 	private bool CheckForChangeState () 

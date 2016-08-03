@@ -123,6 +123,22 @@ public class AIStateMachine : MonoBehaviour {
 
 
 	// Math Calculation Helpers
+	public float HumanDistanceToBall()
+	{
+		Vector3 HumanPos = HumanMove.transform.position;
+		Vector3 BallPos = Ball.transform.position;
+		float DistanceToBall = (BallPos - HumanPos).magnitude;
+		return DistanceToBall;
+	}
+
+	public float ComputerDistanceToBall()
+	{
+		Vector3 ComputerPos = ComputerMove.transform.position;
+		Vector3 BallPos = Ball.transform.position;
+		float DistanceToBall = (BallPos - ComputerPos).magnitude;
+		return DistanceToBall;
+	}
+
 	public bool BallBehindPlayer() {
 		Vector3 BallPos = Ball.transform.position;
 		Vector3 PlayerPos = HumanMove.transform.position;
