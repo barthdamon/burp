@@ -23,7 +23,7 @@ public class PlayerMove : MonoBehaviour {
 //	//Declare a class that will hold useful information for each body part
 	public class BodyPart
 	{
-		public Transform transform;
+		public Rigidbody rb;
 		public Vector3 storedPosition;
 		public Quaternion storedRotation;
 	}
@@ -37,17 +37,15 @@ public class PlayerMove : MonoBehaviour {
 		rb = gameObject.GetComponent<Rigidbody> ();
 
 		//Find all the transforms in the character, assuming that this script is attached to the root
-		Component[] components=GetComponentsInChildren(typeof(Transform));
+		Component[] components=GetComponentsInChildren(typeof(Rigidbody));
 
 		//For each of the transforms, create a BodyPart instance and store the transform 
 		foreach (Component c in components)
 		{
-			BodyPart bodyPart=new BodyPart();
-			bodyPart.transform=c as Transform;
+			BodyPart bodyPart = new BodyPart();
+			bodyPart.rb = c as Rigidbody;
 			bodyParts.Add(bodyPart);
 		}
-
-		GetComponent<Rigidbody>().AddExplosionForce (5f, transform.position, 10f);
 	}
 
 	void FixedUpdate() {
@@ -113,6 +111,14 @@ public class PlayerMove : MonoBehaviour {
 
 		if (playerManager.IsAlive()) {
 			rb.velocity = FitToBounds(transform.position, nMovement);
+		}
+
+		for (int i = 0; i < bodyParts.Count; i++) {
+			if (bodyParts [i].rb.velocity.magnitude > rb.velocity.magnitude) {
+				Vector3 CurrentVelocity = bodyParts [i].rb.velocity.normalized;
+				CurrentVelocity *= rb.velocity.magnitude;
+				bodyParts [i].rb.velocity = CurrentVelocity;
+			}
 		}
 	}
 

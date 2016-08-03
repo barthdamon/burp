@@ -48,7 +48,7 @@ public class GlobalState : State {
 
 		// Override current heading to make sure doesnt hit ball into its own goal
 		Vector3 ComputerToBall = BallPos - ComputerPos;
-		if (ComputerToBall.x < 0 && ComputerToBall.magnitude < BallDodgeDistance && AI.Ball.transform.position.y > - 5) {
+		if (ComputerToBall.x < -2 && ComputerToBall.magnitude < BallDodgeDistance && AI.Ball.transform.position.x > -5) {
 			Vector3 NewHeading = AI.GetCurrentHeading();
 			AI.SetCurrentHeading(CalculateAvoidBallTrajectory(NewHeading));
 		}
@@ -88,8 +88,8 @@ public class GlobalState : State {
 	private Vector3 CalculateAvoidBallTrajectory(Vector3 Dest) {
 		// set a course 45degrees up or down from target pos vector depending on which is closer
 		Vector3 AvoidBallTrajectory;
-		if (AI.Ball.transform.position.y > -1) {
-			if (AI.ComputerMove.transform.position.y > 0) {
+		if (AI.Ball.transform.position.y > -5) {
+			if (AI.ComputerMove.transform.position.y < 0) {
 				// below the ball
 				//			Debug.Log ("greater than y");
 				AvoidBallTrajectory = new Vector3 (Mathf.Cos (Dest.x - (Mathf.PI / 4)), Mathf.Sin (Dest.y - (Mathf.PI / 4)), 0f);

@@ -48,6 +48,17 @@ public class ShootingState : State {
 	public override void Execute() {
 //		Debug.Log ("Executing Shooting State");
 		// Determine if need to switch state to defending
+		if (AI.ComputerDistanceToBall () > AI.HumanDistanceToBall () + 7) {
+			AI.ChangeState (EState.Defending);
+		}
+
+		if ((AI.Ball.transform.position - AI.ComputerMove.transform.position).x < 0) {
+			BallOffset = .75f;
+		} else {
+			BallOffset = .25f;
+		}
+
+
 		Vector3 TargetPos = CalculateTargetPos ();
 
 		Vector3 NewHeading = new Vector3(0f,0f,0f);
@@ -80,13 +91,16 @@ public class ShootingState : State {
 
 	private Vector3 CalculateTargetPos()
 	{
+
+		// The computer is swinging around cause it gets there but doesn't actually hit the ball, so it starts trying to go back.....
+
 		// First get the position of the ball
 		Vector3 BallPos = AI.Ball.transform.position;
-//		if (AI.ComputerDistanceToBall () < 5f) {
-//			BallPos = AI.Ball.transform.position;
-//		} else {
-//			BallPos = AI.Ball.GetFuturePositionFromDistance (AI.ComputerDistanceToBall (), AI.GetCurrentSpeed ());
-//		}
+		if ((AI.Ball.transform.position - AI.ComputerMove.transform.position).x > -1 ) {
+			BallPos = AI.Ball.transform.position;
+		} else {
+			BallPos = AI.Ball.GetFuturePositionFromDistance (AI.ComputerDistanceToBall (), AI.GetCurrentSpeed ());
+		}
 
 		Vector3 DesiredTrajectory = BallPos - GoalPos;
 		Vector3 TargetPos;
@@ -97,7 +111,7 @@ public class ShootingState : State {
 
 		// IF other player is in the way, and computer is outside shooting range, change the target pos to be a relative distance to the goal that produces a good angle to score (around the player)
 		Vector3 VectorToHuman = AI.HumanMove.transform.position - BallPos;
-		if ((Vector3.Dot (VectorToHuman, DesiredTrajectory) > HumanPosAvoidConstant) && DesiredTrajectory.magnitude > 5) {
+		if ((Vector3.Dot (VectorToHuman, DesiredTrajectory) > HumanPosAvoidConstant) && DesiredTrajectory.magnitude > 8 && (AI.Ball.transform.position - AI.HumanMove.transform.position).x < 0) {
 			// Human is in the way, try to shoot around him
 			Vector3 ScorePastHumanTrajectory = new Vector3(Mathf.Cos(Dest.x - (Mathf.PI / 8)), Mathf.Sin(Dest.y - (Mathf.PI / 8)), 0f);
 			TargetPos = BallPos + (ScorePastHumanTrajectory * BallOffset);
@@ -132,7 +146,7 @@ public class ShootingState : State {
 			}
 		}
 
-		if (ReachedGoalLine && ProjectedBallPosition.y > -3 && ProjectedBallPosition.y < 3) {
+		if (ReachedGoalLine && ProjectedBallPosition.y > -2 && ProjectedBallPosition.y < 2) {
 			return true;
 		} else {
 			return false;
