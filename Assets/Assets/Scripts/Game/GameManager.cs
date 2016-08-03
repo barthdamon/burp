@@ -20,6 +20,8 @@ public class GameManager : MonoBehaviour {
 	public GameObject ActiveBall;
 	public AIStateMachine AI;
 
+	public SoundSystem LoudSpeaker;
+
 
 	public PlayerManager PlayerOneManager;
 	public PlayerMove PlayerOneMove;
@@ -78,6 +80,7 @@ public class GameManager : MonoBehaviour {
 		Destroy (ActiveBall);
 		ResetGame ();
 		SpawnBall ();
+		LoudSpeaker.GameStartMusic ();
 	}
 
 	public void PVPButtonPressed() {
@@ -120,6 +123,7 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void GameOver() {
+		LoudSpeaker.GameEndMusic ();
 		Debug.Log ("GAME OVER");
 		gameActive = false;
 		if (teamOneScore == teamTwoScore) {

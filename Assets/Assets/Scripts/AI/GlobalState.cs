@@ -5,6 +5,7 @@ using System.Collections;
 public class GlobalState : State {
 
 	float BallDodgeDistance = 3f;
+	float TurnAroundDodgeDistance = 1f;
 	float HumanPosAvoidConstant = 0.3f;
 	Vector3 GoalPos = new Vector3(20f,0f,0f);
 
@@ -54,6 +55,10 @@ public class GlobalState : State {
 
 		if (((BallPos - ComputerPos).x < 0) && ((BallPos - HumanPos).x < 0) && BallPos.x < 15 && AI.HumanPlayer.IsAlive()) {
 			AI.ChangeState (EState.Defending);
+		}
+
+		if (ComputerToBall.x < 0 && ComputerToBall.magnitude < TurnAroundDodgeDistance) {
+			AI.SetCurrentHeading (-ComputerToBall.normalized);
 		}
 
 		// Do something to change the current heading so that it doesn't jam into the wall here.....

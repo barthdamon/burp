@@ -112,7 +112,7 @@ public class DefendingState : State {
 		Vector3 AvoidBallTrajectory;
 		if (Dest.y > 0) {
 			// below the ball
-			AvoidBallTrajectory = new Vector3(-1 * Mathf.Cos(Dest.x - (Mathf.PI / 4)), Mathf.Sin(Dest.y - (Mathf.PI / 4)), 0f);
+			AvoidBallTrajectory = new Vector3(Mathf.Cos(Dest.x - (Mathf.PI / 4)), Mathf.Sin(Dest.y - (Mathf.PI / 4)), 0f);
 			return AvoidBallTrajectory.normalized;
 		} else {
 			// above the ball
