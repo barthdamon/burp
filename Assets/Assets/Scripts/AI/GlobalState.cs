@@ -48,7 +48,7 @@ public class GlobalState : State {
 
 		// Override current heading to make sure doesnt hit ball into its own goal
 		Vector3 ComputerToBall = BallPos - ComputerPos;
-		if (ComputerToBall.x < -2 && ComputerToBall.magnitude < BallDodgeDistance && AI.Ball.transform.position.x > -5) {
+		if (ComputerToBall.x < -2 && ComputerToBall.magnitude < BallDodgeDistance) {
 			Vector3 NewHeading = AI.GetCurrentHeading();
 			AI.SetCurrentHeading(CalculateAvoidBallTrajectory(NewHeading));
 		}

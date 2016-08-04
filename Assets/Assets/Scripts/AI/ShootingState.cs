@@ -95,6 +95,11 @@ public class ShootingState : State {
 		// The computer is swinging around cause it gets there but doesn't actually hit the ball, so it starts trying to go back.....
 
 		// First get the position of the ball
+		if (ShotOnTarget ()) {
+			Debug.Log("Ball on target");
+			return new Vector3 (0f, 0f, 0f);
+		}
+
 		Vector3 BallPos = AI.Ball.transform.position;
 		if ((AI.Ball.transform.position - AI.ComputerMove.transform.position).x > -1 ) {
 			BallPos = AI.Ball.transform.position;
@@ -117,37 +122,26 @@ public class ShootingState : State {
 			TargetPos = BallPos + (ScorePastHumanTrajectory * BallOffset);
 		}
 
-		if (ShotOnTarget (BallPos)) {
-			Debug.Log("Ball on target");
-			return new Vector3 (0f, 0f, 0f);
-		}
-
 		return TargetPos;
 
 	}
 
-	private bool ShotOnTarget(Vector3 BallPos)
+	private bool ShotOnTarget()
 	{
 		Vector3 BallVelocity = AI.Ball.GetComponent<Rigidbody> ().velocity;
-		// do math with gravity to see if it will make it to the goal
+//		BallVelocity += Physics.gravity;
+		Vector3 RayDirection = BallVelocity.normalized;
 
-		float TimeToReach = 50;
-		bool ReachedGoalLine = false;
-		Vector3 ProjectedBallPosition = BallPos;
-		Vector3 HeightAtGoalLine;
+		Ray BallTrajectory = new Ray (AI.Ball.transform.position, RayDirection);
 
-		while (!ReachedGoalLine && TimeToReach > 0) {
-			ProjectedBallPosition += BallVelocity / 10;
-			ProjectedBallPosition += Physics.gravity / 10;
-			TimeToReach -= 1;
-			// Not exact, cause could be just within two velocity counts, but w/e will have to do
-			if (ProjectedBallPosition.x >= 20) {
-				ReachedGoalLine = true;
+		RaycastHit Hit;
+		if (Physics.Raycast (BallTrajectory, out Hit, 20)) {
+			if (Hit.collider.GetComponent<GoalLine> () == AI.HumanGoal) {
+				Debug.Log ("Shot On Target");
+				return true;
+			} else {
+				return false;
 			}
-		}
-
-		if (ReachedGoalLine && ProjectedBallPosition.y > -2 && ProjectedBallPosition.y < 2) {
-			return true;
 		} else {
 			return false;
 		}

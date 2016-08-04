@@ -13,6 +13,9 @@ public class AIStateMachine : MonoBehaviour {
 	public PlayerManager ComputerManager;
 	public PlayerMove ComputerMove;
 
+	public GoalLine HumanGoal;
+	public GoalLine ComputerGoal;
+
 	// An array to store all of the state singletons
 	private List<State> StateSingletons;
 	// This stores the base steering behaviors

@@ -5,6 +5,7 @@ public class BallMove : MonoBehaviour {
 
 	public BoxCollider floorCollider;
 	private Rigidbody rb;
+	private float LengthFromBall = 3f;
 
 	// Use this for initialization
 	void Start () {
@@ -44,4 +45,24 @@ public class BallMove : MonoBehaviour {
 
 	}
 
+	public ShootingCircle GetShootingCircle(Vector3 ShootingVector, bool isForTop)
+	{
+		return new ShootingCircle (Vector3.zero, 2f);
+	}
+		
+}
+
+
+[System.Serializable]
+public struct ShootingCircle {
+	public Vector3 CenterPoint;
+	public float Radius;
+	public float Distance;
+
+	public ShootingCircle(Vector3 CenterPoint, float Distance)
+	{
+		this.CenterPoint = CenterPoint;
+		this.Radius = 0.5f;
+		this.Distance = Distance;
+	}
 }
