@@ -5,7 +5,7 @@ public class BallMove : MonoBehaviour {
 
 	public BoxCollider floorCollider;
 	private Rigidbody rb;
-	private float LengthFromBall = 3f;
+	private float ShootingLength = 2f;
 
 	// Use this for initialization
 	void Start () {
@@ -45,9 +45,16 @@ public class BallMove : MonoBehaviour {
 
 	}
 
-	public ShootingCircle GetShootingCircle(Vector3 ShootingVector, bool isForTop)
+	public ShootingCircle[] GetShootingCircles(Vector3 ShootingVector)
 	{
-		return new ShootingCircle (Vector3.zero, 2f);
+		// use these when the balls x velocity is low
+
+		// calculate the center points
+
+
+		ShootingCircle TopCircle = new ShootingCircle (Vector3.zero, 2f);
+		ShootingCircle BottomCircle = new ShootingCircle (Vector3.zero, 2f);
+		return new ShootingCircle[] { TopCircle, BottomCircle };
 	}
 		
 }

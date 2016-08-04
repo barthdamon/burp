@@ -48,6 +48,9 @@ public class ShootingState : State {
 	public override void Execute() {
 //		Debug.Log ("Executing Shooting State");
 		// Determine if need to switch state to defending
+
+		// Deal with when caught going back and forth up and down trying to score in front of human players goal
+
 		if (AI.ComputerDistanceToBall () > AI.HumanDistanceToBall () + 7) {
 			AI.ChangeState (EState.Defending);
 		}
