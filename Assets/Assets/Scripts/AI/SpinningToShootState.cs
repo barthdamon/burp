@@ -2,9 +2,9 @@
 using System.Collections;
 
 [System.Serializable]
-public class AttackingState : State {
+public class SpinningToShootState : State {
 
-	public AttackingState(AIStateMachine AI, EState EState)
+	public SpinningToShootState(AIStateMachine AI, EState EState)
 	{
 		this.AI = AI;
 		this.EState = EState;
@@ -20,8 +20,8 @@ public class AttackingState : State {
 
 	// Called when in this state
 	public override void Execute() {
-//		CheckForChangeState ();
-		
+		CheckForChangeState ();
+
 		Vector3 PlayerPos = AI.HumanMove.transform.position;
 		Vector3 ComputerPos = AI.ComputerMove.transform.position;
 
@@ -43,5 +43,16 @@ public class AttackingState : State {
 			break;
 		}
 	}
-		
+
+	private bool CheckForChangeState () 
+	{
+		// will naturally go on defense, just check if should go on offense here
+		// If the ball is past the player and the computer is past the player then start shooting
+		if (AI.BallBehindPlayer () && AI.ComputerBehindPlayer ()) {
+			AI.ChangeState (EState.Shooting);
+			return true;
+		} else {
+			return false;
+		}
+	}
 }

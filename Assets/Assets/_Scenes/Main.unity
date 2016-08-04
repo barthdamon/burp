@@ -2904,7 +2904,7 @@ MonoBehaviour:
   ComputerManager: {fileID: 1423856774}
   ComputerMove: {fileID: 1760726909}
   HumanGoal: {fileID: 1729506652}
-  ComputerGoal: {fileID: 1729506652}
+  ComputerGoal: {fileID: 409249476}
 --- !u!114 &1423856774 stripped
 MonoBehaviour:
   m_PrefabParentObject: {fileID: 11485174, guid: 9516995a981d24f1d94e651fc46761f7,

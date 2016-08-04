@@ -41,6 +41,10 @@ public class AIStateMachine : MonoBehaviour {
 		StateSingletons.Add (new EvadingState(this, EState.Evading));
 		StateSingletons.Add (new DefendingState(this, EState.Defending));
 		StateSingletons.Add (new AttackingState(this, EState.Attacking));
+		StateSingletons.Add (new ClearingState(this, EState.Clearing));
+		StateSingletons.Add (new RetreatingState(this, EState.Retreating));
+		StateSingletons.Add (new SpinningToShootState(this, EState.SpinningToShoot));
+//		StateSingletons.Add (new 
 
 		BeginSimulation ();
 	}
@@ -124,21 +128,25 @@ public class AIStateMachine : MonoBehaviour {
 		return CurrentSpeed;
 	}
 
+	public State GetCurrentState()
+	{
+		return CurrentState;
+	}
 
 	// Math Calculation Helpers
-	public float HumanDistanceToBall()
+	public Vector3 HumanDistanceToBall()
 	{
 		Vector3 HumanPos = HumanMove.transform.position;
 		Vector3 BallPos = Ball.transform.position;
-		float DistanceToBall = (BallPos - HumanPos).magnitude;
+		Vector3 DistanceToBall = (BallPos - HumanPos);
 		return DistanceToBall;
 	}
 
-	public float ComputerDistanceToBall()
+	public Vector3 ComputerDistanceToBall()
 	{
 		Vector3 ComputerPos = ComputerMove.transform.position;
 		Vector3 BallPos = Ball.transform.position;
-		float DistanceToBall = (BallPos - ComputerPos).magnitude;
+		Vector3 DistanceToBall = (BallPos - ComputerPos);
 		return DistanceToBall;
 	}
 
@@ -152,6 +160,27 @@ public class AIStateMachine : MonoBehaviour {
 		Vector3 ComputerPos = ComputerMove.transform.position;
 		Vector3 PlayerPos = HumanMove.transform.position;
 		return ComputerPos.x > PlayerPos.x;
+	}
+
+	public bool ShotOnTarget(GoalLine Goal)
+	{
+		Vector3 BallVelocity = Ball.GetComponent<Rigidbody> ().velocity;
+		//		BallVelocity += Physics.gravity;
+		Vector3 RayDirection = BallVelocity.normalized;
+
+		Ray BallTrajectory = new Ray (Ball.transform.position, RayDirection);
+
+		RaycastHit Hit;
+		if (Physics.Raycast (BallTrajectory, out Hit, 20)) {
+			if (Hit.collider.GetComponent<GoalLine> () == Goal && Mathf.Abs(BallVelocity.x) > 0) {
+//				Debug.Log ("Shot On Target");
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			return false;
+		}
 	}
 
 }

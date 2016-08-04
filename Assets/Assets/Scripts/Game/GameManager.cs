@@ -71,6 +71,8 @@ public class GameManager : MonoBehaviour {
 		teamOneScoreText.text = "0";
 		teamTwoScoreText.text = "0";
 
+		PlayerOneManager.ResetHealthForStart ();
+		PlayerTwoManager.ResetHealthForStart ();
 
 		endTime = Time.time + 180;
 		gameActive = true;

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public enum EState { Global, Shooting, Defending, Attacking, Evading };
+public enum EState { Global, Shooting, Defending, Attacking, Evading, SpinningToShoot, Clearing, Retreating };
 
 [System.Serializable]
 public abstract class State {

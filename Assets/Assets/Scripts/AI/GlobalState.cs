@@ -53,16 +53,35 @@ public class GlobalState : State {
 			AI.SetCurrentHeading(CalculateAvoidBallTrajectory(NewHeading));
 		}
 
-		if (((BallPos - ComputerPos).x < 0) && ((BallPos - HumanPos).x < 0) && BallPos.x < 15 && AI.HumanPlayer.IsAlive()) {
+		if (ComputerToBall.x < -0.5 && ComputerToBall.magnitude < TurnAroundDodgeDistance) {
+			AI.SetCurrentHeading (-1 * ComputerToBall.normalized);
+		}
+		CheckForChangeState ();
+	}
+
+	private void CheckForChangeState() {
+		// if the ball is moving on a vector that will hit the goal, hit it on any other vector that will change it from hitting the goal
+		if (GoingToBeScoredOn ()) {
 			AI.ChangeState (EState.Defending);
+		} else if ((AI.ComputerDistanceToBall().x < 0) && (AI.HumanDistanceToBall().x < 0) && AI.HumanPlayer.IsAlive()) {
+			if (AI.Ball.transform.position.x > -5) {
+				AI.ChangeState (EState.Retreating);
+			} else {
+				AI.ChangeState (EState.Defending);
+			}
 		}
 
-		if (ComputerToBall.x < 0 && ComputerToBall.magnitude < TurnAroundDodgeDistance) {
-			AI.SetCurrentHeading (-ComputerToBall.normalized);
+		if (!AI.HumanPlayer.IsAlive ()) {
+			AI.ChangeState (EState.Shooting);
 		}
+	}
 
-		// Do something to change the current heading so that it doesn't jam into the wall here.....
-		AI.SetCurrentHeading(RasberryJam());
+	private bool GoingToBeScoredOn() {
+		if (AI.ComputerDistanceToBall ().x < 0 && AI.ShotOnTarget (AI.ComputerGoal)) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	// Called when state recieves a message
@@ -88,32 +107,23 @@ public class GlobalState : State {
 	private Vector3 CalculateAvoidBallTrajectory(Vector3 Dest) {
 		// set a course 45degrees up or down from target pos vector depending on which is closer
 		Vector3 AvoidBallTrajectory;
-		if (AI.Ball.transform.position.y > -5) {
-			if (AI.ComputerMove.transform.position.y < 0) {
-				// below the ball
-				//			Debug.Log ("greater than y");
-				AvoidBallTrajectory = new Vector3 (Mathf.Cos (Dest.x - (Mathf.PI / 4)), Mathf.Sin (Dest.y - (Mathf.PI / 4)), 0f);
-				if (AvoidBallTrajectory.x > 0) {
-					AvoidBallTrajectory.x *= -1;
-				}
-				return AvoidBallTrajectory.normalized;
-			} else {
-				// above the ball
-				//			Debug.Log ("Less than y");
-				AvoidBallTrajectory = new Vector3 (Mathf.Cos (Dest.x - (Mathf.PI / 4)), Mathf.Sin (Dest.y - (Mathf.PI / 4)), 0f);
-				if (AvoidBallTrajectory.x > 0) {
-					AvoidBallTrajectory.x *= -1;
-				}
-				return AvoidBallTrajectory.normalized;
+		if (AI.ComputerMove.transform.position.y > 0) {
+			// below the ball
+			//			Debug.Log ("greater than y");
+			AvoidBallTrajectory = new Vector3 (Mathf.Cos (Dest.x - (Mathf.PI / 2)), Mathf.Sin (Dest.y - (Mathf.PI / 2)), 0f);
+			if (AvoidBallTrajectory.x > 0) {
+				AvoidBallTrajectory.x *= -1;
 			}
+			return AvoidBallTrajectory.normalized;
 		} else {
-			return Dest;
+			// above the ball
+			//			Debug.Log ("Less than y");
+			AvoidBallTrajectory = new Vector3 (Mathf.Cos (Dest.x + (Mathf.PI / 2)), Mathf.Sin (Dest.y + (Mathf.PI / 2)), 0f);
+			if (AvoidBallTrajectory.x > 0) {
+				AvoidBallTrajectory.x *= -1;
+			}
+			return AvoidBallTrajectory.normalized;
 		}
 
-	}
-
-	private Vector3 RasberryJam() {
-		// clamp the heading normals so that it doesnt try to go through walls
-		return AI.GetCurrentHeading();
 	}
 }

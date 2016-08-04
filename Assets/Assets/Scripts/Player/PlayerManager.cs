@@ -47,6 +47,12 @@ public class PlayerManager : MonoBehaviour {
 		}
 	}
 
+	public void ResetHealthForStart()
+	{
+		health = 100f;
+		playerHealthSlider.value = 1;
+	}
+
 	public void LostHealth (float amount) {
 		if (!knockedOut) {
 			if (amount > 0) {

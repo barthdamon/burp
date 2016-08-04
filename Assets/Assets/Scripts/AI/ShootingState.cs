@@ -51,9 +51,9 @@ public class ShootingState : State {
 
 		// Deal with when caught going back and forth up and down trying to score in front of human players goal
 
-		if (AI.ComputerDistanceToBall () > AI.HumanDistanceToBall () + 7) {
-			AI.ChangeState (EState.Defending);
-		}
+//		if (AI.ComputerDistanceToBall ().magnitude > AI.HumanDistanceToBall ().magnitude + 7) {
+//			AI.ChangeState (EState.Retreating);
+//		}
 
 		if ((AI.Ball.transform.position - AI.ComputerMove.transform.position).x < 0) {
 			BallOffset = .75f;
@@ -95,11 +95,9 @@ public class ShootingState : State {
 	private Vector3 CalculateTargetPos()
 	{
 
-		// The computer is swinging around cause it gets there but doesn't actually hit the ball, so it starts trying to go back.....
-
 		// First get the position of the ball
-		if (ShotOnTarget ()) {
-			Debug.Log("Ball on target");
+		if (AI.ShotOnTarget (AI.HumanGoal)) {
+//			Debug.Log("Ball on target");
 			return new Vector3 (0f, 0f, 0f);
 		}
 
@@ -107,7 +105,7 @@ public class ShootingState : State {
 		if ((AI.Ball.transform.position - AI.ComputerMove.transform.position).x > -1 ) {
 			BallPos = AI.Ball.transform.position;
 		} else {
-			BallPos = AI.Ball.GetFuturePositionFromDistance (AI.ComputerDistanceToBall (), AI.GetCurrentSpeed ());
+			BallPos = AI.Ball.GetFuturePositionFromDistance (AI.ComputerDistanceToBall ().magnitude, AI.GetCurrentSpeed ());
 		}
 
 		Vector3 DesiredTrajectory = BallPos - GoalPos;
@@ -125,29 +123,18 @@ public class ShootingState : State {
 			TargetPos = BallPos + (ScorePastHumanTrajectory * BallOffset);
 		}
 
+		// If computer is on the opposite side of the desired pos (negative dot product with desired pos vec and computer to ball)
+			// go slightly down and back away from the ball
+		if (Vector3.Dot (Dest, AI.ComputerDistanceToBall().normalized) > 0.1 && AI.ComputerDistanceToBall().x < 0) {
+			// go sideways then directly to the point
+			float YPosition = AI.ComputerDistanceToBall().y;
+			float XPosition = AI.ComputerDistanceToBall().x;
+			TargetPos = BallPos + new Vector3 ((XPosition * 2f), (YPosition * 2f), 0f);
+		}
+
+
 		return TargetPos;
 
-	}
-
-	private bool ShotOnTarget()
-	{
-		Vector3 BallVelocity = AI.Ball.GetComponent<Rigidbody> ().velocity;
-//		BallVelocity += Physics.gravity;
-		Vector3 RayDirection = BallVelocity.normalized;
-
-		Ray BallTrajectory = new Ray (AI.Ball.transform.position, RayDirection);
-
-		RaycastHit Hit;
-		if (Physics.Raycast (BallTrajectory, out Hit, 20)) {
-			if (Hit.collider.GetComponent<GoalLine> () == AI.HumanGoal) {
-				Debug.Log ("Shot On Target");
-				return true;
-			} else {
-				return false;
-			}
-		} else {
-			return false;
-		}
 	}
 
 

@@ -28,6 +28,7 @@ public class DefendingState : State {
 	// Called when in this state
 	public override void Execute() {
 
+
 		// if comptuer is way closer to the ball than the player, start shooting
 		Vector3 BallPos = AI.Ball.transform.position;
 		Vector3 PlayerToBall = (BallPos - AI.HumanMove.transform.position);
@@ -63,9 +64,9 @@ public class DefendingState : State {
 			break;
 		case EMessage.PlayerLowHealth:
 			// dont wait to attack if you already have the human beat
-			if (AI.ComputerMove.transform.position.x - AI.HumanMove.transform.position.x > 0) {
+//			if (AI.ComputerMove.transform.position.x - AI.HumanMove.transform.position.x > 0) {
 				AI.ChangeState (EState.Attacking);
-			}
+//			}
 			break;
 		default:
 			break;
@@ -75,7 +76,13 @@ public class DefendingState : State {
 	private Vector3 CalculateTargetPos()
 	{
 		// First get the position of the ball
-		Vector3 BallPos = AI.Ball.GetFuturePositionFromDistance(AI.ComputerDistanceToBall(), AI.GetCurrentSpeed());
+		Vector3 BallPos;
+		if (AI.ComputerDistanceToBall ().magnitude > 5f) {
+			BallPos = AI.Ball.GetFuturePositionFromDistance (AI.ComputerDistanceToBall ().magnitude, AI.GetCurrentSpeed ());
+		} else {
+			BallPos = AI.Ball.transform.position;
+		}
+
 
 		// Find the vector from the ball to the goal
 		Vector3 DesiredTrajectory = BallPos - GoalPos;
